@@ -2,8 +2,6 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,9 +35,7 @@ const Contato = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ocean-navy via-primary to-ocean-cyan">
-      <Header />
-      <main className="pt-24 pb-16">
+    <main className="flex-1 pt-24 pb-16 bg-gradient-to-br from-ocean-navy via-primary to-ocean-cyan">
         <div className="container mx-auto px-4 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -157,9 +153,7 @@ const Contato = () => {
             </div>
           </motion.div>
         </div>
-      </main>
-      <Footer />
-    </div>
+    </main>
   );
 };
 

@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import RouteCard from "@/components/RouteCard";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,10 +6,8 @@ import content from "@/data/content.json";
 
 const Roteiros = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="pt-24">
-        <div className="container mx-auto px-4 py-12">
+    <main className="flex-1 pt-24 bg-background">
+      <div className="container mx-auto px-4 py-12">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
             <Link to="/" className="hover:text-accent transition-colors">
               Início
@@ -46,9 +42,7 @@ const Roteiros = () => {
             ))}
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+    </main>
   );
 };
 
