@@ -65,7 +65,7 @@ const ExperiencesSection = () => {
           className="flex justify-center"
         >
           <Button asChild size="lg" variant="default" className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6">
-            <Link to="/roteiros">Conheça nossos Roteiros</Link>
+            <Link to="/roteiros" onClick={() => window.scrollTo(0, 0)}>Conheça nossos Roteiros</Link>
           </Button>
         </motion.div>
       </div>
