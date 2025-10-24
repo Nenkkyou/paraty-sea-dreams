@@ -92,18 +92,18 @@ const HeroCarousel = () => {
 
       <button
         onClick={scrollPrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-primary/50 hover:bg-primary/70 backdrop-blur-sm text-primary-foreground rounded-full p-3 transition-all"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-primary-foreground/70 hover:text-primary-foreground transition-all"
         aria-label="Imagem anterior"
       >
-        <ChevronLeft className="w-6 h-6" />
+        <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10" />
       </button>
 
       <button
         onClick={scrollNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-primary/50 hover:bg-primary/70 backdrop-blur-sm text-primary-foreground rounded-full p-3 transition-all"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-primary-foreground/70 hover:text-primary-foreground transition-all"
         aria-label="Próxima imagem"
       >
-        <ChevronRight className="w-6 h-6" />
+        <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10" />
       </button>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
