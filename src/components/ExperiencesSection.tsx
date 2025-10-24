@@ -38,10 +38,9 @@ const ExperiencesSection = () => {
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-card rounded-2xl p-6 sm:p-8 text-center shadow-lg hover:shadow-xl transition-all border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
+                className="bg-card rounded-2xl p-6 sm:p-8 text-center shadow-lg sm:hover:shadow-xl sm:hover:scale-105 transition-all border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent will-change-transform"
                 tabIndex={0}
               >
                 <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-accent/10 rounded-full mb-4 sm:mb-6 mx-auto">
