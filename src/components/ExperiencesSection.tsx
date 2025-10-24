@@ -13,24 +13,24 @@ const iconMap = {
 
 const ExperiencesSection = () => {
   return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-4">
+    <section className="py-16 sm:py-20 lg:py-24 bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4">
             Experiências Exclusivas
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto px-4">
             Navegue pelas águas mais cristalinas de Paraty com conforto e estilo
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-12">
           {content.experiencias.map((exp, index) => {
             const Icon = iconMap[exp.icone as keyof typeof iconMap];
             return (
@@ -41,13 +41,13 @@ const ExperiencesSection = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
-                className="bg-card rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="bg-card rounded-2xl p-6 sm:p-8 text-center shadow-lg hover:shadow-xl transition-all border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 tabIndex={0}
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/10 rounded-full mb-6">
-                  <Icon className="w-8 h-8 text-accent" />
+                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-accent/10 rounded-full mb-4 sm:mb-6 mx-auto">
+                  <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-accent" />
                 </div>
-                <h3 className="font-display text-xl font-semibold text-card-foreground mb-3">
+                <h3 className="font-display text-lg sm:text-xl font-semibold text-card-foreground mb-2 sm:mb-3">
                   {exp.titulo}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
@@ -63,9 +63,9 @@ const ExperiencesSection = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
+          className="flex justify-center"
         >
-          <Button asChild size="lg" variant="default" className="text-lg px-8 py-6">
+          <Button asChild size="lg" variant="default" className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6">
             <Link to="/roteiros">Conheça nossos Roteiros</Link>
           </Button>
         </motion.div>

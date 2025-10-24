@@ -65,7 +65,7 @@ const HeroCarousel = () => {
         </div>
       </div>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 z-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedIndex}
@@ -73,17 +73,19 @@ const HeroCarousel = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="space-y-6"
+            className="w-full max-w-5xl mx-auto flex flex-col items-center space-y-4 sm:space-y-6"
           >
-            <h1 className="font-display text-5xl md:text-7xl font-bold text-primary-foreground">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight">
               {heroTexts[selectedIndex].title}
             </h1>
-            <p className="font-body text-xl md:text-2xl text-primary-foreground/90 max-w-2xl">
+            <p className="font-body text-lg sm:text-xl md:text-2xl text-primary-foreground/90 max-w-3xl mx-auto">
               {heroTexts[selectedIndex].subtitle}
             </p>
-            <Button asChild size="lg" variant="secondary" className="text-lg px-8 py-6 mt-8">
-              <Link to="/roteiros">Conheça nossos Roteiros</Link>
-            </Button>
+            <div className="pt-4 sm:pt-6">
+              <Button asChild size="lg" variant="secondary" className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6">
+                <Link to="/roteiros">Conheça nossos Roteiros</Link>
+              </Button>
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
