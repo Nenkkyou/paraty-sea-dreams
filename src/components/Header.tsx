@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Anchor } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const Header = () => {
   const location = useLocation();
@@ -15,7 +15,7 @@ const Header = () => {
     >
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <Anchor className="w-8 h-8 text-accent transition-transform group-hover:rotate-12" />
+          <img src={logo} alt="ParatyBoat" className="w-8 h-8 transition-transform group-hover:rotate-12" />
           <span className="font-display text-2xl font-bold text-primary-foreground">
             ParatyBoat
           </span>
