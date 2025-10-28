@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const heroImages = [
-  "/assets/boats/hero-1.jpg",
-  "/assets/boats/hero-2.jpg",
+  `/assets/boats/hero-1.jpg?v=${Date.now()}`,
+  `/assets/boats/hero-2.jpg?v=${Date.now()}`,
   "/assets/boats/hero-3.jpg",
   "/assets/boats/hero-4.jpg",
   "/assets/boats/hero-5.jpg",
