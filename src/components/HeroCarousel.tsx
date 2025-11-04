@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import hero1 from "@/assets/hero/hero-1.jpg";
 import hero2 from "@/assets/hero/hero-2.jpg";
 import hero3 from "@/assets/hero/hero-3.jpg";
@@ -12,17 +13,18 @@ import hero6 from "@/assets/hero/hero-6.jpg";
 
 const heroImages = [hero1, hero2, hero3, hero5, hero6];
 
-const heroTexts = [
-  { title: "Descubra Paraty pelo Mar", subtitle: "Navegue com Conforto e Liberdade" },
-  { title: "Águas Cristalinas", subtitle: "Praias Paradisíacas à Sua Espera" },
-  { title: "Experiências Exclusivas", subtitle: "Roteiros Personalizados para Você" },
-  { title: "Momentos Inesquecíveis", subtitle: "Crie Memórias que Duram para Sempre" },
-  { title: "Conforto e Estilo", subtitle: "A Lancha dos Seus Sonhos em Paraty" },
-];
-
 const HeroCarousel = () => {
+  const { t } = useTranslation();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 30 });
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const heroTexts = [
+    { title: t('hero.slide1Title'), subtitle: t('hero.slide1Subtitle') },
+    { title: t('hero.slide2Title'), subtitle: t('hero.slide2Subtitle') },
+    { title: t('hero.slide3Title'), subtitle: t('hero.slide3Subtitle') },
+    { title: t('hero.slide4Title'), subtitle: t('hero.slide4Subtitle') },
+    { title: t('hero.slide5Title'), subtitle: t('hero.slide5Subtitle') },
+  ];
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -82,7 +84,7 @@ const HeroCarousel = () => {
             </p>
             <div className="pt-4 sm:pt-6">
               <Button asChild size="lg" variant="secondary" className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6">
-                <Link to="/roteiros">Conheça nossos Roteiros</Link>
+                <Link to="/roteiros">{t('hero.cta')}</Link>
               </Button>
             </div>
           </motion.div>
@@ -92,7 +94,7 @@ const HeroCarousel = () => {
       <button
         onClick={scrollPrev}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-primary-foreground/70 hover:text-primary-foreground transition-all"
-        aria-label="Imagem anterior"
+        aria-label={t('hero.prevButton')}
       >
         <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10" />
       </button>
@@ -100,7 +102,7 @@ const HeroCarousel = () => {
       <button
         onClick={scrollNext}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-primary-foreground/70 hover:text-primary-foreground transition-all"
-        aria-label="Próxima imagem"
+        aria-label={t('hero.nextButton')}
       >
         <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10" />
       </button>
@@ -113,7 +115,7 @@ const HeroCarousel = () => {
             className={`w-2 h-2 rounded-full transition-all ${
               index === selectedIndex ? "bg-accent w-8" : "bg-primary-foreground/50"
             }`}
-            aria-label={`Ir para slide ${index + 1}`}
+            aria-label={`${t('hero.goToSlide')} ${index + 1}`}
           />
         ))}
       </div>

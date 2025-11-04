@@ -1,10 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import logo from "@/assets/logo.png";
+import LanguageSelector from "./LanguageSelector";
 
 const Header = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   
   return (
     <motion.header
@@ -30,7 +33,7 @@ const Header = () => {
                 : "text-primary-foreground/80 hover:text-accent"
             }`}
           >
-            Início
+            {t('header.inicio')}
           </Link>
           <Link
             to="/roteiros"
@@ -40,13 +43,16 @@ const Header = () => {
                 : "text-primary-foreground/80 hover:text-accent"
             }`}
           >
-            Roteiros
+            {t('header.roteiros')}
           </Link>
         </nav>
         
-        <Button asChild variant="secondary" className="font-medium">
-          <Link to="/contato">Entre em Contato</Link>
-        </Button>
+        <div className="flex items-center gap-3">
+          <LanguageSelector />
+          <Button asChild variant="secondary" className="font-medium">
+            <Link to="/contato">{t('header.contato')}</Link>
+          </Button>
+        </div>
       </div>
     </motion.header>
   );

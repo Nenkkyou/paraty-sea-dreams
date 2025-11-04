@@ -1,6 +1,9 @@
 import { Anchor } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
+  
   return (
     <footer className="bg-primary text-primary-foreground py-10 sm:py-12 border-t border-accent/20 mt-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,10 +13,10 @@ const Footer = () => {
             <span className="font-display text-lg sm:text-xl font-bold">ParatyBoat</span>
           </div>
           <p className="text-primary-foreground/70 text-xs sm:text-sm max-w-md px-4">
-            Passeios de lancha exclusivos em Paraty-RJ. Descubra o paraíso navegando pelas águas cristalinas do litoral fluminense.
+            {t('footer.description')}
           </p>
           <p className="text-primary-foreground/50 text-xs">
-            © {new Date().getFullYear()} ParatyBoat. Todos os direitos reservados.
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
         </div>
       </div>

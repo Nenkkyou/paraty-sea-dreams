@@ -8,17 +8,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Ship, Send } from "lucide-react";
-
-const formSchema = z.object({
-  nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100),
-  email: z.string().email("E-mail inválido").max(255),
-  telefone: z.string().min(10, "Telefone inválido").max(20),
-  mensagem: z.string().min(10, "Mensagem deve ter pelo menos 10 caracteres").max(1000),
-});
-
-type FormData = z.infer<typeof formSchema>;
+import { useTranslation } from "react-i18next";
 
 const Contato = () => {
+  const { t } = useTranslation();
+
+  const formSchema = z.object({
+    nome: z.string().min(2, t('contact.form.nameRequired')).max(100),
+    email: z.string().email(t('contact.form.emailInvalid')).max(255),
+    telefone: z.string().min(10, t('contact.form.phoneInvalid')).max(20),
+    mensagem: z.string().min(10, t('contact.form.messageRequired')).max(1000),
+  });
+
+  type FormData = z.infer<typeof formSchema>;
+
   const {
     register,
     handleSubmit,
@@ -30,7 +33,7 @@ const Contato = () => {
 
   const onSubmit = (data: FormData) => {
     console.log("Form data:", data);
-    toast.success("Mensagem enviada com sucesso! Entraremos em contato em breve.");
+    toast.success(t('contact.form.successMessage'));
     reset();
   };
 
@@ -49,16 +52,16 @@ const Contato = () => {
                 <div className="flex flex-col items-center md:items-start text-center md:text-left">
                   <Ship className="w-12 h-12 sm:w-16 sm:h-16 text-accent mb-4 sm:mb-6" />
                   <h1 className="font-display text-3xl sm:text-4xl font-bold mb-3 sm:mb-4">
-                    Entre em Contato
+                    {t('contact.title')}
                   </h1>
                   <p className="text-primary-foreground/80 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6">
-                    Reserve seu passeio e descubra Paraty do mar. Nossa equipe está pronta para criar a experiência perfeita para você.
+                    {t('contact.subtitle')}
                   </p>
                   <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm text-primary-foreground/70 w-full">
-                    <p>✓ Atendimento personalizado</p>
-                    <p>✓ Roteiros flexíveis</p>
-                    <p>✓ Lanchas modernas e confortáveis</p>
-                    <p>✓ Equipe experiente</p>
+                    <p>✓ {t('contact.feature1')}</p>
+                    <p>✓ {t('contact.feature2')}</p>
+                    <p>✓ {t('contact.feature3')}</p>
+                    <p>✓ {t('contact.feature4')}</p>
                   </div>
                 </div>
               </div>
@@ -67,7 +70,7 @@ const Contato = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="nome" className="text-card-foreground text-sm sm:text-base">
-                      Nome completo
+                      {t('contact.form.nameLabel')}
                     </Label>
                     <Input
                       id="nome"
@@ -85,7 +88,7 @@ const Contato = () => {
 
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-card-foreground text-sm sm:text-base">
-                      E-mail
+                      {t('contact.form.emailLabel')}
                     </Label>
                     <Input
                       id="email"
@@ -104,7 +107,7 @@ const Contato = () => {
 
                   <div className="space-y-2">
                     <Label htmlFor="telefone" className="text-card-foreground text-sm sm:text-base">
-                      Telefone
+                      {t('contact.form.phoneLabel')}
                     </Label>
                     <Input
                       id="telefone"
@@ -123,7 +126,7 @@ const Contato = () => {
 
                   <div className="space-y-2">
                     <Label htmlFor="mensagem" className="text-card-foreground text-sm sm:text-base">
-                      Mensagem
+                      {t('contact.form.messageLabel')}
                     </Label>
                     <Textarea
                       id="mensagem"
@@ -147,7 +150,7 @@ const Contato = () => {
                     variant="default"
                   >
                     <Send className="w-4 h-4 mr-2" />
-                    Enviar Mensagem
+                    {t('contact.form.submitButton')}
                   </Button>
                 </form>
                 </div>

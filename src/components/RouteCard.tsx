@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface RouteCardProps {
   nome: string;
@@ -10,6 +11,8 @@ interface RouteCardProps {
 }
 
 const RouteCard = ({ nome, descricao, imagem, index }: RouteCardProps) => {
+  const { t } = useTranslation();
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -35,7 +38,7 @@ const RouteCard = ({ nome, descricao, imagem, index }: RouteCardProps) => {
           {descricao}
         </p>
         <Button asChild variant="secondary" className="w-full mt-auto">
-          <Link to="/contato">Entre em Contato</Link>
+          <Link to="/contato">{t('header.contato')}</Link>
         </Button>
       </div>
     </motion.div>
