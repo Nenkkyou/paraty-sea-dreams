@@ -7,24 +7,32 @@ import en from './locales/en.json';
 import es from './locales/es.json';
 import fr from './locales/fr.json';
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources: {
-      pt: { translation: pt },
-      en: { translation: en },
-      es: { translation: es },
-      fr: { translation: fr },
-    },
-    fallbackLng: 'pt',
-    interpolation: {
-      escapeValue: false,
-    },
-    detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
-    },
-  });
+const initI18n = () => {
+  i18n
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+      resources: {
+        pt: { translation: pt },
+        en: { translation: en },
+        es: { translation: es },
+        fr: { translation: fr },
+      },
+      fallbackLng: 'pt',
+      lng: 'pt',
+      interpolation: {
+        escapeValue: false,
+      },
+      detection: {
+        order: ['localStorage', 'navigator'],
+        caches: ['localStorage'],
+      },
+      react: {
+        useSuspense: false,
+      },
+    });
+};
+
+initI18n();
 
 export default i18n;
