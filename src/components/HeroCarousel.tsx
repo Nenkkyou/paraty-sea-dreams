@@ -4,15 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import hero1 from "@/assets/hero/hero-1.jpg";
+import hero2 from "@/assets/hero/hero-2.jpg";
+import hero3 from "@/assets/hero/hero-3.jpg";
+import hero4 from "@/assets/hero/hero-4.jpg";
+import hero5 from "@/assets/hero/hero-5.jpg";
+import hero6 from "@/assets/hero/hero-6.jpg";
 
-const heroImages = [
-  "/assets/boats/hero-1.jpg",
-  "/assets/boats/hero-2.jpg",
-  "/assets/boats/hero-3.jpg",
-  "/assets/boats/hero-4.jpg",
-  "/assets/boats/hero-5.jpg",
-  "/assets/boats/hero-6.jpg",
-];
+const heroImages = [hero1, hero2, hero3, hero4, hero5, hero6];
 
 const heroTexts = [
   { title: "Descubra Paraty pelo Mar", subtitle: "Navegue com Conforto e Liberdade" },
