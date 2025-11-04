@@ -1,11 +1,18 @@
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import { Ship, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -17,6 +24,7 @@ const Contato = () => {
     nome: z.string().min(2, t('contact.form.nameRequired')).max(100),
     email: z.string().email(t('contact.form.emailInvalid')).max(255),
     telefone: z.string().min(10, t('contact.form.phoneInvalid')).max(20),
+    roteiro: z.string().min(1, t('contact.form.routeRequired')),
     mensagem: z.string().min(10, t('contact.form.messageRequired')).max(1000),
   });
 
@@ -26,10 +34,22 @@ const Contato = () => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
+
+  const routesOptions = [
+    { key: 'sacoMamangua', label: t('routes.items.sacoMamangua.nome') },
+    { key: 'ilhaPelado', label: t('routes.items.ilhaPelado.nome') },
+    { key: 'ilhaCedro', label: t('routes.items.ilhaCedro.nome') },
+    { key: 'ilhaMalvao', label: t('routes.items.ilhaMalvao.nome') },
+    { key: 'praiaVentura', label: t('routes.items.praiaVentura.nome') },
+    { key: 'praiaSobrado', label: t('routes.items.praiaSobrado.nome') },
+    { key: 'praiaEngenho', label: t('routes.items.praiaEngenho.nome') },
+    { key: 'praiaCrepusculo', label: t('routes.items.praiaCrepusculo.nome') },
+  ];
 
   const onSubmit = (data: FormData) => {
     console.log("Form data:", data);
@@ -120,6 +140,44 @@ const Contato = () => {
                     {errors.telefone && (
                       <p id="telefone-error" className="text-destructive text-xs sm:text-sm">
                         {errors.telefone.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="roteiro" className="text-card-foreground text-sm sm:text-base">
+                      {t('contact.form.routeLabel')}
+                    </Label>
+                    <Controller
+                      name="roteiro"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger 
+                            id="roteiro"
+                            className="bg-background border-border focus:ring-accent h-10 sm:h-11"
+                            aria-invalid={errors.roteiro ? "true" : "false"}
+                            aria-describedby={errors.roteiro ? "roteiro-error" : undefined}
+                          >
+                            <SelectValue placeholder={t('contact.form.routePlaceholder')} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-card border-border z-50">
+                            {routesOptions.map((route) => (
+                              <SelectItem 
+                                key={route.key} 
+                                value={route.key}
+                                className="hover:bg-accent/10 cursor-pointer"
+                              >
+                                {route.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.roteiro && (
+                      <p id="roteiro-error" className="text-destructive text-xs sm:text-sm">
+                        {errors.roteiro.message}
                       </p>
                     )}
                   </div>

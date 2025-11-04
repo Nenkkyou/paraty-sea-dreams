@@ -94,11 +94,14 @@
       "nameLabel": "Nom complet",
       "emailLabel": "Email",
       "phoneLabel": "Téléphone",
+      "routeLabel": "Circuit d'Intérêt",
+      "routePlaceholder": "Sélectionnez un circuit",
       "messageLabel": "Message",
       "submitButton": "Envoyer le Message",
       "nameRequired": "Le nom doit contenir au moins 2 caractères",
       "emailInvalid": "Email invalide",
       "phoneInvalid": "Téléphone invalide",
+      "routeRequired": "Le circuit est requis",
       "messageRequired": "Le message doit contenir au moins 10 caractères",
       "successMessage": "Message envoyé avec succès ! Nous vous contacterons bientôt."
     }

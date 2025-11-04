@@ -94,11 +94,14 @@
       "nameLabel": "Full name",
       "emailLabel": "Email",
       "phoneLabel": "Phone",
+      "routeLabel": "Tour of Interest",
+      "routePlaceholder": "Select a tour",
       "messageLabel": "Message",
       "submitButton": "Send Message",
       "nameRequired": "Name must be at least 2 characters",
       "emailInvalid": "Invalid email",
       "phoneInvalid": "Invalid phone",
+      "routeRequired": "Tour is required",
       "messageRequired": "Message must be at least 10 characters",
       "successMessage": "Message sent successfully! We will contact you shortly."
     }

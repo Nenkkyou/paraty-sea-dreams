@@ -94,11 +94,14 @@
       "nameLabel": "Nombre completo",
       "emailLabel": "Correo electrónico",
       "phoneLabel": "Teléfono",
+      "routeLabel": "Recorrido de Interés",
+      "routePlaceholder": "Selecciona un recorrido",
       "messageLabel": "Mensaje",
       "submitButton": "Enviar Mensaje",
       "nameRequired": "El nombre debe tener al menos 2 caracteres",
       "emailInvalid": "Correo electrónico inválido",
       "phoneInvalid": "Teléfono inválido",
+      "routeRequired": "El recorrido es obligatorio",
       "messageRequired": "El mensaje debe tener al menos 10 caracteres",
       "successMessage": "¡Mensaje enviado con éxito! Nos pondremos en contacto pronto."
     }
