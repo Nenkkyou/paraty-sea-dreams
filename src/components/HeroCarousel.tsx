@@ -11,6 +11,7 @@ const heroImages = [
   "/assets/boats/hero-3.jpg",
   "/assets/boats/hero-4.jpg",
   "/assets/boats/hero-5.jpg",
+  "/assets/boats/hero-6.jpg",
 ];
 
 const heroTexts = [
@@ -19,6 +20,7 @@ const heroTexts = [
   { title: "Experiências Exclusivas", subtitle: "Roteiros Personalizados para Você" },
   { title: "Natureza Intocada", subtitle: "Explore o Litoral Mais Belo do Brasil" },
   { title: "Momentos Inesquecíveis", subtitle: "Crie Memórias que Duram para Sempre" },
+  { title: "Conforto e Estilo", subtitle: "A Lancha dos Seus Sonhos em Paraty" },
 ];
 
 const HeroCarousel = () => {
