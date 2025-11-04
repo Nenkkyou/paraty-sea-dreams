@@ -80,6 +80,10 @@
       "praiaCrepusculo": {
         "nome": "Plage du Crépuscule",
         "descricao": "Célèbre pour ses couchers de soleil spectaculaires. Vivez des moments magiques pendant que le soleil se couche sur les eaux tranquilles de Paraty."
+      },
+      "passeioPersonalizado": {
+        "nome": "Circuit Personnalisé",
+        "descricao": "Créez votre propre aventure ! Concevez un itinéraire exclusif selon vos préférences, en choisissant les destinations, les activités et la durée de l'excursion."
       }
     }
   },

@@ -80,6 +80,10 @@
       "praiaCrepusculo": {
         "nome": "Crepúsculo Beach",
         "descricao": "Famous for its spectacular sunsets. Experience magical moments as the sun sets over the tranquil waters of Paraty."
+      },
+      "passeioPersonalizado": {
+        "nome": "Personalized Tour",
+        "descricao": "Create your own adventure! Design an exclusive itinerary according to your preferences, choosing destinations, activities, and tour duration."
       }
     }
   },

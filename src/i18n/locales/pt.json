@@ -80,6 +80,10 @@
       "praiaCrepusculo": {
         "nome": "Praia do Crepúsculo",
         "descricao": "Famosa por seus pores do sol espetaculares. Viva momentos mágicos enquanto o sol se põe sobre as águas tranquilas de Paraty."
+      },
+      "passeioPersonalizado": {
+        "nome": "Passeio Personalizado",
+        "descricao": "Crie sua própria aventura! Monte um roteiro exclusivo de acordo com suas preferências, escolhendo os destinos, atividades e duração do passeio."
       }
     }
   },

@@ -17,6 +17,7 @@ const Roteiros = () => {
     { key: 'praiaSobrado', image: 'roteiro-por-do-sol.jpg' },
     { key: 'praiaEngenho', image: 'roteiro-lagoa-azul.jpg' },
     { key: 'praiaCrepusculo', image: 'roteiro-por-do-sol.jpg' },
+    { key: 'passeioPersonalizado', image: 'roteiro-ilhas-paradisiacas.jpg' },
   ];
 
   return (
