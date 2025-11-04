@@ -49,29 +49,37 @@
     "breadcrumbHome": "Accueil",
     "breadcrumbCurrent": "Circuits",
     "items": {
-      "lagoaAzul": {
-        "nome": "Lagon Bleu et Plages",
-        "descricao": "Visitez le célèbre Lagon Bleu avec ses eaux cristallines et ses plages de sable blanc. Comprend des arrêts à la Plage Rouge et d'autres criques paradisiaques."
-      },
-      "praiasDesertas": {
-        "nome": "Plages Désertes",
-        "descricao": "Découvrez des plages isolées et intactes, accessibles uniquement par la mer. Une expérience unique de connexion avec la nature."
-      },
       "sacoMamangua": {
         "nome": "Saco do Mamanguá",
         "descricao": "Naviguez à travers le seul fjord tropical du Brésil. Paysages époustouflants entourés de montagnes couvertes de forêt atlantique."
       },
-      "porDoSol": {
-        "nome": "Coucher de Soleil Romantique",
-        "descricao": "Vivez le coucher de soleil le plus romantique de Paraty à bord, avec une vue privilégiée sur les îles et les montagnes au crépuscule."
+      "ilhaPelado": {
+        "nome": "Île de Pelado",
+        "descricao": "Découvrez l'une des îles les plus charmantes de la région avec des eaux transparentes et des plages de sable blanc. Parfaite pour la plongée et la détente."
       },
-      "ilhasParadisiacas": {
-        "nome": "Îles Paradisiaques",
-        "descricao": "Circuit complet des principales îles de la région. Explorez plusieurs plages et criques en une journée inoubliable."
+      "ilhaCedro": {
+        "nome": "Île de Cedro",
+        "descricao": "Île paradisiaque avec une végétation préservée et des criques secrètes. Un véritable refuge de tranquillité et de beauté naturelle."
       },
-      "mergulhoSnorkel": {
-        "nome": "Plongée et Snorkeling",
-        "descricao": "Découvrez la vie marine de Paraty avec du matériel de snorkeling. Eaux claires remplies de poissons tropicaux."
+      "ilhaMalvao": {
+        "nome": "Île de Malvão",
+        "descricao": "Explorez des plages isolées et des eaux cristallines sur cette île enchanteresse. Idéal pour ceux qui recherchent l'intimité et le contact avec la nature."
+      },
+      "praiaVentura": {
+        "nome": "Plage de Ventura",
+        "descricao": "Plage d'une beauté incomparable avec une mer calme et des eaux transparentes. Parfaite pour les familles et pour profiter d'une journée relaxante."
+      },
+      "praiaSobrado": {
+        "nome": "Plage de Sobrado",
+        "descricao": "Crique protégée avec des eaux calmes et du sable fin. Un paradis caché accessible uniquement par bateau."
+      },
+      "praiaEngenho": {
+        "nome": "Plage d'Engenho",
+        "descricao": "Plage historique entourée d'une nature luxuriante. Combinez histoire, culture et beautés naturelles en une seule destination."
+      },
+      "praiaCrepusculo": {
+        "nome": "Plage du Crépuscule",
+        "descricao": "Célèbre pour ses couchers de soleil spectaculaires. Vivez des moments magiques pendant que le soleil se couche sur les eaux tranquilles de Paraty."
       }
     }
   },

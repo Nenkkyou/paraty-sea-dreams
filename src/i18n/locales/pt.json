@@ -45,33 +45,41 @@
   },
   "routes": {
     "pageTitle": "Nossos Roteiros",
-    "pageSubtitle": "Escolha entre os destinos mais espetaculares de Paraty e embarque em uma jornada inesquecível pelas águas cristalinas do litoral fluminense",
+    "pageSubtitle": "Escolha entre os destinos mais espetaculares de Paraty e embarque em uma jornada inesquecível pelas águas cristalinas da costa do Rio de Janeiro",
     "breadcrumbHome": "Início",
     "breadcrumbCurrent": "Roteiros",
     "items": {
-      "lagoaAzul": {
-        "nome": "Lagoa Azul & Praias",
-        "descricao": "Visite a famosa Lagoa Azul com suas águas cristalinas e praias de areia branca. Inclui paradas em Praia Vermelha e outras enseadas paradisíacas."
-      },
-      "praiasDesertas": {
-        "nome": "Praias Desertas",
-        "descricao": "Descubra praias isoladas e intocadas, acessíveis apenas pelo mar. Uma experiência única de conexão com a natureza."
-      },
       "sacoMamangua": {
         "nome": "Saco do Mamanguá",
         "descricao": "Navegue pelo único fiorde tropical do Brasil. Paisagens deslumbrantes cercadas por montanhas cobertas de mata atlântica."
       },
-      "porDoSol": {
-        "nome": "Pôr do Sol Romântico",
-        "descricao": "Experimente o pôr do sol mais romântico de Paraty a bordo, com vista privilegiada das ilhas e montanhas ao entardecer."
+      "ilhaPelado": {
+        "nome": "Ilha do Pelado",
+        "descricao": "Descubra uma das ilhas mais charmosas da região com praias de águas transparentes e areia branca. Perfeita para mergulho e relaxamento."
       },
-      "ilhasParadisiacas": {
-        "nome": "Ilhas Paradisíacas",
-        "descricao": "Tour completo pelas principais ilhas da região. Explore múltiplas praias e enseadas em um único dia inesquecível."
+      "ilhaCedro": {
+        "nome": "Ilha do Cedro",
+        "descricao": "Ilha paradisíaca com vegetação preservada e enseadas secretas. Um verdadeiro refúgio de tranquilidade e beleza natural."
       },
-      "mergulhoSnorkel": {
-        "nome": "Mergulho & Snorkel",
-        "descricao": "Descubra a vida marinha de Paraty com equipamentos de snorkel. Águas claras e repletas de peixes tropicais."
+      "ilhaMalvao": {
+        "nome": "Ilha do Malvão",
+        "descricao": "Explore praias isoladas e águas cristalinas nesta ilha encantadora. Ideal para quem busca privacidade e contato com a natureza."
+      },
+      "praiaVentura": {
+        "nome": "Praia do Ventura",
+        "descricao": "Praia de beleza inigualável com mar calmo e águas transparentes. Perfeita para famílias e para desfrutar de um dia relaxante."
+      },
+      "praiaSobrado": {
+        "nome": "Praia do Sobrado",
+        "descricao": "Enseada protegida com águas tranquilas e areia fina. Um paraíso escondido acessível apenas por barco."
+      },
+      "praiaEngenho": {
+        "nome": "Praia do Engenho",
+        "descricao": "Praia histórica cercada por natureza exuberante. Combine história, cultura e belezas naturais em um único destino."
+      },
+      "praiaCrepusculo": {
+        "nome": "Praia do Crepúsculo",
+        "descricao": "Famosa por seus pores do sol espetaculares. Viva momentos mágicos enquanto o sol se põe sobre as águas tranquilas de Paraty."
       }
     }
   },

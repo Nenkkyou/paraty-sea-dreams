@@ -9,12 +9,14 @@ const Roteiros = () => {
   const { t } = useTranslation();
 
   const routesData = [
-    { key: 'lagoaAzul', image: 'roteiro-lagoa-azul.jpg' },
-    { key: 'praiasDesertas', image: 'roteiro-praias-desertas.jpg' },
     { key: 'sacoMamangua', image: 'roteiro-mamangua.jpg' },
-    { key: 'porDoSol', image: 'roteiro-por-do-sol.jpg' },
-    { key: 'ilhasParadisiacas', image: 'roteiro-ilhas-paradisiacas.jpg' },
-    { key: 'mergulhoSnorkel', image: 'roteiro-mergulho.jpg' },
+    { key: 'ilhaPelado', image: 'roteiro-ilhas-paradisiacas.jpg' },
+    { key: 'ilhaCedro', image: 'roteiro-lagoa-azul.jpg' },
+    { key: 'ilhaMalvao', image: 'roteiro-praias-desertas.jpg' },
+    { key: 'praiaVentura', image: 'roteiro-mergulho.jpg' },
+    { key: 'praiaSobrado', image: 'roteiro-por-do-sol.jpg' },
+    { key: 'praiaEngenho', image: 'roteiro-lagoa-azul.jpg' },
+    { key: 'praiaCrepusculo', image: 'roteiro-por-do-sol.jpg' },
   ];
 
   return (

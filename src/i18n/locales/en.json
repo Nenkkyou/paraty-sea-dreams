@@ -49,29 +49,37 @@
     "breadcrumbHome": "Home",
     "breadcrumbCurrent": "Tours",
     "items": {
-      "lagoaAzul": {
-        "nome": "Blue Lagoon & Beaches",
-        "descricao": "Visit the famous Blue Lagoon with its crystal clear waters and white sand beaches. Includes stops at Red Beach and other paradisiacal coves."
-      },
-      "praiasDesertas": {
-        "nome": "Deserted Beaches",
-        "descricao": "Discover isolated and untouched beaches, accessible only by sea. A unique experience of connection with nature."
-      },
       "sacoMamangua": {
         "nome": "Saco do Mamanguá",
         "descricao": "Navigate through Brazil's only tropical fjord. Stunning landscapes surrounded by mountains covered with Atlantic rainforest."
       },
-      "porDoSol": {
-        "nome": "Romantic Sunset",
-        "descricao": "Experience the most romantic sunset in Paraty on board, with a privileged view of the islands and mountains at dusk."
+      "ilhaPelado": {
+        "nome": "Pelado Island",
+        "descricao": "Discover one of the most charming islands in the region with transparent waters and white sand beaches. Perfect for diving and relaxation."
       },
-      "ilhasParadisiacas": {
-        "nome": "Paradisiacal Islands",
-        "descricao": "Complete tour of the region's main islands. Explore multiple beaches and coves in one unforgettable day."
+      "ilhaCedro": {
+        "nome": "Cedro Island",
+        "descricao": "Paradisiacal island with preserved vegetation and secret coves. A true refuge of tranquility and natural beauty."
       },
-      "mergulhoSnorkel": {
-        "nome": "Diving & Snorkeling",
-        "descricao": "Discover Paraty's marine life with snorkeling equipment. Clear waters full of tropical fish."
+      "ilhaMalvao": {
+        "nome": "Malvão Island",
+        "descricao": "Explore isolated beaches and crystal clear waters on this enchanting island. Ideal for those seeking privacy and contact with nature."
+      },
+      "praiaVentura": {
+        "nome": "Ventura Beach",
+        "descricao": "Beach of unparalleled beauty with calm seas and transparent waters. Perfect for families and enjoying a relaxing day."
+      },
+      "praiaSobrado": {
+        "nome": "Sobrado Beach",
+        "descricao": "Protected cove with calm waters and fine sand. A hidden paradise accessible only by boat."
+      },
+      "praiaEngenho": {
+        "nome": "Engenho Beach",
+        "descricao": "Historic beach surrounded by lush nature. Combine history, culture and natural beauties in a single destination."
+      },
+      "praiaCrepusculo": {
+        "nome": "Crepúsculo Beach",
+        "descricao": "Famous for its spectacular sunsets. Experience magical moments as the sun sets over the tranquil waters of Paraty."
       }
     }
   },

@@ -49,29 +49,37 @@
     "breadcrumbHome": "Inicio",
     "breadcrumbCurrent": "Recorridos",
     "items": {
-      "lagoaAzul": {
-        "nome": "Laguna Azul y Playas",
-        "descricao": "Visita la famosa Laguna Azul con sus aguas cristalinas y playas de arena blanca. Incluye paradas en Playa Roja y otras ensenadas paradisíacas."
-      },
-      "praiasDesertas": {
-        "nome": "Playas Desiertas",
-        "descricao": "Descubre playas aisladas e intactas, accesibles solo por mar. Una experiencia única de conexión con la naturaleza."
-      },
       "sacoMamangua": {
         "nome": "Saco do Mamanguá",
         "descricao": "Navega por el único fiordo tropical de Brasil. Paisajes impresionantes rodeados de montañas cubiertas de bosque atlántico."
       },
-      "porDoSol": {
-        "nome": "Atardecer Romántico",
-        "descricao": "Experimenta el atardecer más romántico de Paraty a bordo, con una vista privilegiada de las islas y montañas al anochecer."
+      "ilhaPelado": {
+        "nome": "Isla del Pelado",
+        "descricao": "Descubre una de las islas más encantadoras de la región con aguas transparentes y playas de arena blanca. Perfecta para bucear y relajarse."
       },
-      "ilhasParadisiacas": {
-        "nome": "Islas Paradisíacas",
-        "descricao": "Tour completo por las principales islas de la región. Explora múltiples playas y ensenadas en un día inolvidable."
+      "ilhaCedro": {
+        "nome": "Isla del Cedro",
+        "descricao": "Isla paradisíaca con vegetación preservada y ensenadas secretas. Un verdadero refugio de tranquilidad y belleza natural."
       },
-      "mergulhoSnorkel": {
-        "nome": "Buceo y Snorkel",
-        "descricao": "Descubre la vida marina de Paraty con equipos de snorkel. Aguas claras llenas de peces tropicales."
+      "ilhaMalvao": {
+        "nome": "Isla del Malvão",
+        "descricao": "Explora playas aisladas y aguas cristalinas en esta isla encantadora. Ideal para quienes buscan privacidad y contacto con la naturaleza."
+      },
+      "praiaVentura": {
+        "nome": "Playa Ventura",
+        "descricao": "Playa de belleza inigualable con mar tranquilo y aguas transparentes. Perfecta para familias y para disfrutar de un día relajante."
+      },
+      "praiaSobrado": {
+        "nome": "Playa Sobrado",
+        "descricao": "Ensenada protegida con aguas tranquilas y arena fina. Un paraíso escondido accesible solo en barco."
+      },
+      "praiaEngenho": {
+        "nome": "Playa del Engenho",
+        "descricao": "Playa histórica rodeada de naturaleza exuberante. Combina historia, cultura y bellezas naturales en un solo destino."
+      },
+      "praiaCrepusculo": {
+        "nome": "Playa del Crepúsculo",
+        "descricao": "Famosa por sus espectaculares puestas de sol. Vive momentos mágicos mientras el sol se pone sobre las aguas tranquilas de Paraty."
       }
     }
   },
