@@ -7,17 +7,15 @@ import { Link } from "react-router-dom";
 import hero1 from "@/assets/hero/hero-1.jpg";
 import hero2 from "@/assets/hero/hero-2.jpg";
 import hero3 from "@/assets/hero/hero-3.jpg";
-import hero4 from "@/assets/hero/hero-4.jpg";
 import hero5 from "@/assets/hero/hero-5.jpg";
 import hero6 from "@/assets/hero/hero-6.jpg";
 
-const heroImages = [hero1, hero2, hero3, hero4, hero5, hero6];
+const heroImages = [hero1, hero2, hero3, hero5, hero6];
 
 const heroTexts = [
   { title: "Descubra Paraty pelo Mar", subtitle: "Navegue com Conforto e Liberdade" },
   { title: "Águas Cristalinas", subtitle: "Praias Paradisíacas à Sua Espera" },
   { title: "Experiências Exclusivas", subtitle: "Roteiros Personalizados para Você" },
-  { title: "Natureza Intocada", subtitle: "Explore o Litoral Mais Belo do Brasil" },
   { title: "Momentos Inesquecíveis", subtitle: "Crie Memórias que Duram para Sempre" },
   { title: "Conforto e Estilo", subtitle: "A Lancha dos Seus Sonhos em Paraty" },
 ];
