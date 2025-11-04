@@ -38,7 +38,7 @@ const RouteCard = ({ nome, descricao, imagem, index }: RouteCardProps) => {
           {descricao}
         </p>
         <Button asChild variant="secondary" className="w-full mt-auto">
-          <Link to="/contato">{t('header.contato')}</Link>
+          <Link to="/contato" onClick={() => window.scrollTo(0, 0)}>{t('header.contato')}</Link>
         </Button>
       </div>
     </motion.div>

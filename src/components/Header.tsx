@@ -50,7 +50,7 @@ const Header = () => {
         <div className="flex items-center gap-3">
           <LanguageSelector />
           <Button asChild variant="secondary" className="font-medium">
-            <Link to="/contato">{t('header.contato')}</Link>
+            <Link to="/contato" onClick={() => window.scrollTo(0, 0)}>{t('header.contato')}</Link>
           </Button>
         </div>
       </div>
