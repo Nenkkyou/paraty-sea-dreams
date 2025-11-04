@@ -96,6 +96,7 @@
       "phoneLabel": "Teléfono",
       "routeLabel": "Recorrido de Interés",
       "routePlaceholder": "Selecciona un recorrido",
+      "routeOther": "Otro",
       "messageLabel": "Mensaje",
       "submitButton": "Enviar Mensaje",
       "nameRequired": "El nombre debe tener al menos 2 caracteres",

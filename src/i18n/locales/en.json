@@ -96,6 +96,7 @@
       "phoneLabel": "Phone",
       "routeLabel": "Tour of Interest",
       "routePlaceholder": "Select a tour",
+      "routeOther": "Other",
       "messageLabel": "Message",
       "submitButton": "Send Message",
       "nameRequired": "Name must be at least 2 characters",

@@ -49,6 +49,7 @@ const Contato = () => {
     { key: 'praiaSobrado', label: t('routes.items.praiaSobrado.nome') },
     { key: 'praiaEngenho', label: t('routes.items.praiaEngenho.nome') },
     { key: 'praiaCrepusculo', label: t('routes.items.praiaCrepusculo.nome') },
+    { key: 'outro', label: t('contact.form.routeOther') },
   ];
 
   const onSubmit = (data: FormData) => {
@@ -95,7 +96,7 @@ const Contato = () => {
                     <Input
                       id="nome"
                       {...register("nome")}
-                      className="bg-background border-border focus:ring-accent h-10 sm:h-11"
+                      className="bg-muted/30 border-border focus:ring-accent h-10 sm:h-11"
                       aria-invalid={errors.nome ? "true" : "false"}
                       aria-describedby={errors.nome ? "nome-error" : undefined}
                     />
@@ -114,7 +115,7 @@ const Contato = () => {
                       id="email"
                       type="email"
                       {...register("email")}
-                      className="bg-background border-border focus:ring-accent h-10 sm:h-11"
+                      className="bg-muted/30 border-border focus:ring-accent h-10 sm:h-11"
                       aria-invalid={errors.email ? "true" : "false"}
                       aria-describedby={errors.email ? "email-error" : undefined}
                     />
@@ -133,7 +134,7 @@ const Contato = () => {
                       id="telefone"
                       type="tel"
                       {...register("telefone")}
-                      className="bg-background border-border focus:ring-accent h-10 sm:h-11"
+                      className="bg-muted/30 border-border focus:ring-accent h-10 sm:h-11"
                       aria-invalid={errors.telefone ? "true" : "false"}
                       aria-describedby={errors.telefone ? "telefone-error" : undefined}
                     />
@@ -155,7 +156,7 @@ const Contato = () => {
                         <Select onValueChange={field.onChange} value={field.value}>
                           <SelectTrigger 
                             id="roteiro"
-                            className="bg-background border-border focus:ring-accent h-10 sm:h-11"
+                            className="bg-muted/30 border-border focus:ring-accent h-10 sm:h-11"
                             aria-invalid={errors.roteiro ? "true" : "false"}
                             aria-describedby={errors.roteiro ? "roteiro-error" : undefined}
                           >
@@ -190,7 +191,7 @@ const Contato = () => {
                       id="mensagem"
                       {...register("mensagem")}
                       rows={4}
-                      className="bg-background border-border focus:ring-accent resize-none text-sm sm:text-base"
+                      className="bg-muted/30 border-border focus:ring-accent resize-none text-sm sm:text-base"
                       aria-invalid={errors.mensagem ? "true" : "false"}
                       aria-describedby={errors.mensagem ? "mensagem-error" : undefined}
                     />
