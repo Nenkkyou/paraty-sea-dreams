@@ -23,7 +23,7 @@ const RouteCard = ({ nome, descricao, imagens, index }: RouteCardProps) => {
       className="group bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all border border-border flex flex-col"
     >
       <div className="relative h-56 sm:h-64 overflow-hidden">
-        <Carousel className="w-full h-full">
+        <Carousel className="w-full h-full" opts={{ loop: true }}>
           <CarouselContent>
             {imagens.map((imagem, idx) => (
               <CarouselItem key={idx}>
