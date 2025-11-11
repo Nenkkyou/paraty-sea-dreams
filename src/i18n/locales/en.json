@@ -69,9 +69,9 @@
         "nome": "Green Lagoon",
         "descricao": "Lagoon with crystal clear emerald waters surrounded by lush nature. A hidden paradise perfect for diving and contemplation."
       },
-      "praiaSobrado": {
-        "nome": "Sobrado Beach",
-        "descricao": "Protected cove with calm waters and fine sand. A hidden paradise accessible only by boat."
+      "apreciacaoFundoMar": {
+        "nome": "Seabed Appreciation",
+        "descricao": "Dive into the crystal clear waters of Paraty and explore the rich marine life. Perfect for snorkeling and observing underwater biodiversity."
       },
       "praiaEngenho": {
         "nome": "Engenho Beach",

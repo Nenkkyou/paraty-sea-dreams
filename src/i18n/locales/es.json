@@ -69,9 +69,9 @@
         "nome": "Laguna Verde",
         "descricao": "Laguna de aguas cristalinas color esmeralda rodeada de naturaleza exuberante. Un paraíso escondido perfecto para bucear y contemplar."
       },
-      "praiaSobrado": {
-        "nome": "Playa Sobrado",
-        "descricao": "Ensenada protegida con aguas tranquilas y arena fina. Un paraíso escondido accesible solo en barco."
+      "apreciacaoFundoMar": {
+        "nome": "Apreciación del Fondo Marino",
+        "descricao": "Sumérgete en las aguas cristalinas de Paraty y explora la rica vida marina. Perfecto para hacer snorkel y contemplar la biodiversidad submarina."
       },
       "praiaEngenho": {
         "nome": "Playa del Engenho",
