@@ -2,15 +2,16 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 interface RouteCardProps {
   nome: string;
   descricao: string;
-  imagem: string;
+  imagens: string[];
   index: number;
 }
 
-const RouteCard = ({ nome, descricao, imagem, index }: RouteCardProps) => {
+const RouteCard = ({ nome, descricao, imagens, index }: RouteCardProps) => {
   const { t } = useTranslation();
   
   return (
@@ -22,12 +23,22 @@ const RouteCard = ({ nome, descricao, imagem, index }: RouteCardProps) => {
       className="group bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all border border-border flex flex-col"
     >
       <div className="relative h-56 sm:h-64 overflow-hidden">
-        <img
-          src={`/assets/boats/${imagem}`}
-          alt={nome}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <Carousel className="w-full h-full">
+          <CarouselContent>
+            {imagens.map((imagem, idx) => (
+              <CarouselItem key={idx}>
+                <img
+                  src={`/assets/boats/${imagem}`}
+                  alt={`${nome} - ${idx + 1}`}
+                  className="w-full h-56 sm:h-64 object-cover"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       </div>
       
       <div className="p-5 sm:p-6 space-y-3 sm:space-y-4 flex flex-col flex-1 text-center">

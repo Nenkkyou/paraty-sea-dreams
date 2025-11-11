@@ -9,15 +9,15 @@ const Roteiros = () => {
   const { t } = useTranslation();
 
   const routesData = [
-    { key: 'sacoMamangua', image: 'roteiro-mamangua.jpg' },
-    { key: 'ilhaPelado', image: 'roteiro-ilhas-paradisiacas.jpg' },
-    { key: 'ilhaCedro', image: 'roteiro-lagoa-azul.jpg' },
-    { key: 'ilhaMalvao', image: 'roteiro-praias-desertas.jpg' },
-    { key: 'praiaVentura', image: 'roteiro-mergulho.jpg' },
-    { key: 'praiaSobrado', image: 'roteiro-por-do-sol.jpg' },
-    { key: 'praiaEngenho', image: 'roteiro-lagoa-azul.jpg' },
-    { key: 'praiaCrepusculo', image: 'roteiro-por-do-sol.jpg' },
-    { key: 'passeioPersonalizado', image: 'roteiro-ilhas-paradisiacas.jpg' },
+    { key: 'sacoMamangua', images: ['mamangua-1.jpg', 'mamangua-2.jpg', 'mamangua-3.jpg', 'mamangua-4.jpg', 'mamangua-5.jpg'] },
+    { key: 'ilhaPelado', images: ['roteiro-ilhas-paradisiacas.jpg'] },
+    { key: 'ilhaCedro', images: ['roteiro-lagoa-azul.jpg'] },
+    { key: 'ilhaMalvao', images: ['roteiro-praias-desertas.jpg'] },
+    { key: 'praiaVentura', images: ['roteiro-mergulho.jpg'] },
+    { key: 'praiaSobrado', images: ['roteiro-por-do-sol.jpg'] },
+    { key: 'praiaEngenho', images: ['roteiro-lagoa-azul.jpg'] },
+    { key: 'praiaCrepusculo', images: ['roteiro-por-do-sol.jpg'] },
+    { key: 'passeioPersonalizado', images: ['roteiro-ilhas-paradisiacas.jpg'] },
   ];
 
   return (
@@ -51,7 +51,7 @@ const Roteiros = () => {
                 key={route.key}
                 nome={t(`routes.items.${route.key}.nome`)}
                 descricao={t(`routes.items.${route.key}.descricao`)}
-                imagem={route.image}
+                imagens={route.images}
                 index={index}
               />
             ))}
