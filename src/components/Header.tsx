@@ -16,10 +16,10 @@ const Header = () => {
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-50 bg-primary/90 backdrop-blur-md border-b border-accent/20"
     >
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <img src={logo} alt="ParatyBoat" className="w-8 h-8 transition-transform group-hover:rotate-12" />
-          <span className="font-display text-2xl font-bold text-primary-foreground">
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
+        <Link to="/" className="flex items-center gap-1.5 sm:gap-2 group shrink-0">
+          <img src={logo} alt="ParatyBoat" className="w-7 h-7 sm:w-8 sm:h-8 transition-transform group-hover:rotate-12" />
+          <span className="font-display text-lg sm:text-2xl font-bold text-primary-foreground">
             ParatyBoat
           </span>
         </Link>
@@ -47,10 +47,13 @@ const Header = () => {
           </Link>
         </nav>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <LanguageSelector />
-          <Button asChild variant="secondary" className="font-medium">
-            <Link to="/contato" onClick={() => window.scrollTo(0, 0)}>{t('header.contato')}</Link>
+          <Button asChild variant="secondary" size="sm" className="font-medium text-xs sm:text-sm px-2 sm:px-4">
+            <Link to="/contato" onClick={() => window.scrollTo(0, 0)}>
+              <span className="hidden xs:inline">{t('header.contato')}</span>
+              <span className="xs:hidden">Contato</span>
+            </Link>
           </Button>
         </div>
       </div>

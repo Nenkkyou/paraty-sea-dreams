@@ -26,13 +26,13 @@ const LanguageSelector = () => {
 
   return (
     <Select value={i18n.language} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="w-[140px] bg-primary/50 border-accent/20 text-primary-foreground hover:bg-primary/70 transition-colors">
-        <div className="flex items-center gap-2">
-          <Languages className="w-4 h-4" />
+      <SelectTrigger className="w-[70px] sm:w-[100px] md:w-[140px] bg-primary/50 border-accent/20 text-primary-foreground hover:bg-primary/70 transition-colors">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Languages className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           <SelectValue>
             <span className="flex items-center gap-1">
-              <span>{currentLanguage.flag}</span>
-              <span className="hidden sm:inline">{currentLanguage.code.toUpperCase()}</span>
+              <span className="text-sm sm:text-base">{currentLanguage.flag}</span>
+              <span className="hidden md:inline text-xs sm:text-sm">{currentLanguage.code.toUpperCase()}</span>
             </span>
           </SelectValue>
         </div>
