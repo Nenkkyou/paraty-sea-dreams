@@ -65,9 +65,9 @@
         "nome": "Ilha dos Mantimentos",
         "descricao": "Explore praias isoladas e águas cristalinas nesta ilha encantadora. Ideal para quem busca privacidade e contato com a natureza."
       },
-      "praiaVentura": {
-        "nome": "Praia do Ventura",
-        "descricao": "Praia de beleza inigualável com mar calmo e águas transparentes. Perfeita para famílias e para desfrutar de um dia relaxante."
+      "lagoaVerde": {
+        "nome": "Lagoa Verde",
+        "descricao": "Lagoa de águas cristalinas e cor esmeralda cercada por natureza exuberante. Um paraíso escondido perfeito para mergulho e contemplação."
       },
       "praiaSobrado": {
         "nome": "Praia do Sobrado",

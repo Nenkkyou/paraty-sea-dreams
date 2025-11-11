@@ -13,7 +13,7 @@ const Roteiros = () => {
     { key: 'ilhaPelado', images: ['pelado-1.jpg', 'pelado-2.jpg', 'pelado-3.jpg', 'pelado-4.jpg'] },
     { key: 'ilhaCedro', images: ['roteiro-lagoa-azul.jpg'] },
     { key: 'ilhaMantimentos', images: ['mantimentos-1.jpg', 'mantimentos-2.jpg', 'mantimentos-3.jpg'] },
-    { key: 'praiaVentura', images: ['roteiro-mergulho.jpg'] },
+    { key: 'lagoaVerde', images: ['lagoa-verde-1.jpg', 'lagoa-verde-2.jpg', 'lagoa-verde-3.jpg', 'lagoa-verde-4.jpg'] },
     { key: 'praiaSobrado', images: ['roteiro-por-do-sol.jpg'] },
     { key: 'praiaEngenho', images: ['roteiro-lagoa-azul.jpg'] },
     { key: 'praiaCrepusculo', images: ['roteiro-por-do-sol.jpg'] },
