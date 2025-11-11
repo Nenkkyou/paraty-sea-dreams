@@ -10,7 +10,7 @@ const Roteiros = () => {
 
   const routesData = [
     { key: 'sacoMamangua', images: ['mamangua-1.jpg', 'mamangua-2.jpg', 'mamangua-3.jpg', 'mamangua-4.jpg', 'mamangua-5.jpg'] },
-    { key: 'ilhaPelado', images: ['roteiro-ilhas-paradisiacas.jpg'] },
+    { key: 'ilhaPelado', images: ['pelado-1.jpg', 'pelado-2.jpg', 'pelado-3.jpg', 'pelado-4.jpg'] },
     { key: 'ilhaCedro', images: ['roteiro-lagoa-azul.jpg'] },
     { key: 'ilhaMalvao', images: ['roteiro-praias-desertas.jpg'] },
     { key: 'praiaVentura', images: ['roteiro-mergulho.jpg'] },

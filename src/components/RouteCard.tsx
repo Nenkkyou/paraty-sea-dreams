@@ -38,7 +38,7 @@ const RouteCard = ({ nome, descricao, imagens, index }: RouteCardProps) => {
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
         </Carousel>
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+        
       </div>
       
       <div className="p-5 sm:p-6 space-y-3 sm:space-y-4 flex flex-col flex-1 text-center">
