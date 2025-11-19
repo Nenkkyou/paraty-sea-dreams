@@ -11,7 +11,7 @@ const Roteiros = () => {
   const routesData = [
     { key: 'sacoMamangua', images: ['mamangua-1.jpg', 'mamangua-2.jpg', 'mamangua-3.jpg', 'mamangua-4.jpg', 'mamangua-5.jpg'] },
     { key: 'ilhaPelado', images: ['pelado-1.jpg', 'pelado-2.jpg', 'pelado-3.jpg', 'pelado-4.jpg'] },
-    { key: 'ilhaCedro', images: ['roteiro-lagoa-azul.jpg'] },
+    { key: 'ilhaCedro', images: ['cedro-1.jpg', 'cedro-2.jpg'] },
     { key: 'ilhaMantimentos', images: ['mantimentos-1.jpg', 'mantimentos-2.jpg', 'mantimentos-3.jpg'] },
     { key: 'lagoaVerde', images: ['lagoa-verde-1.jpg', 'lagoa-verde-2.jpg', 'lagoa-verde-3.jpg', 'lagoa-verde-4.jpg'] },
     { key: 'apreciacaoFundoMar', images: ['mergulho-1.jpg', 'mergulho-2.jpg'] },
