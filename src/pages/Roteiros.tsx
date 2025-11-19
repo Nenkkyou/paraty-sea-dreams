@@ -16,7 +16,7 @@ const Roteiros = () => {
     { key: 'lagoaVerde', images: ['lagoa-verde-1.jpg', 'lagoa-verde-2.jpg', 'lagoa-verde-3.jpg', 'lagoa-verde-4.jpg'] },
     { key: 'apreciacaoFundoMar', images: ['mergulho-1.jpg', 'mergulho-2.jpg'] },
     { key: 'praiaCrepusculo', images: ['roteiro-por-do-sol.jpg', 'crepusculo-2.jpg'] },
-    { key: 'passeioPersonalizado', images: ['roteiro-ilhas-paradisiacas.jpg'] },
+    { key: 'passeioPersonalizado', images: ['passeio-personalizado-art.jpg'] },
   ];
 
   return (
