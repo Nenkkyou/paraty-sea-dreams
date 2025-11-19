@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Ship, Send } from "lucide-react";
+import { Ship, Send, MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const Contato = () => {
@@ -84,6 +84,17 @@ const Contato = () => {
                     <p>✓ {t('contact.feature3')}</p>
                     <p>✓ {t('contact.feature4')}</p>
                   </div>
+                  
+                  <a 
+                    href="https://wa.me/5511982448956"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-8 group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-accent hover:bg-accent/90 text-accent-foreground rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-accent/30 w-full md:w-auto"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-accent/0 via-accent-foreground/10 to-accent/0 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300" />
+                    <MessageCircle className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                    <span className="relative">WhatsApp</span>
+                  </a>
                 </div>
               </div>
 
