@@ -14,11 +14,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Ship, Send, MessageCircle } from "lucide-react";
+import { Ship, Send, MessageCircle, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { sendContactEmail } from "@/services/emailService";
+import { useState } from "react";
 
 const Contato = () => {
   const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const formSchema = z.object({
     nome: z.string().min(2, t('contact.form.nameRequired')).max(100),
@@ -41,21 +44,41 @@ const Contato = () => {
   });
 
   const routesOptions = [
-    { key: 'sacoMamangua', label: t('routes.items.sacoMamangua.nome') },
-    { key: 'ilhaPelado', label: t('routes.items.ilhaPelado.nome') },
-    { key: 'ilhaCedro', label: t('routes.items.ilhaCedro.nome') },
-    { key: 'ilhaMalvao', label: t('routes.items.ilhaMalvao.nome') },
-    { key: 'praiaVentura', label: t('routes.items.praiaVentura.nome') },
-    { key: 'praiaSobrado', label: t('routes.items.praiaSobrado.nome') },
-    { key: 'praiaEngenho', label: t('routes.items.praiaEngenho.nome') },
-    { key: 'praiaCrepusculo', label: t('routes.items.praiaCrepusculo.nome') },
-    { key: 'outro', label: t('contact.form.routeOther') },
+    { key: 'sacoMamangua', label: 'Saco do Mamanguá' },
+    { key: 'ilhaPelado', label: 'Ilha do Pelado' },
+    { key: 'ilhaCedro', label: 'Ilha do Cedro' },
+    { key: 'ilhaMalvao', label: 'Ilha Malvão' },
+    { key: 'praiaVentura', label: 'Praia Ventura' },
+    { key: 'praiaSobrado', label: 'Praia do Sobrado' },
+    { key: 'praiaEngenho', label: 'Praia do Engenho' },
+    { key: 'praiaCrepusculo', label: 'Praia do Crepúsculo' },
+    { key: 'outro', label: 'Outro' },
   ];
 
-  const onSubmit = (data: FormData) => {
-    console.log("Form data:", data);
-    toast.success(t('contact.form.successMessage'));
-    reset();
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
+    
+    try {
+      console.log("Form data:", data);
+      
+      // Enviar email usando o serviço Resend via API backend
+      const result = await sendContactEmail(data);
+      
+      if (result.success) {
+        toast.success(t('contact.form.successMessage'));
+        reset();
+      } else {
+        // Se o serviço falhar, mostrar mensagem específica mas não redirecionar
+        toast.error(result.error || 'Erro temporário. Use o WhatsApp para contato direto.');
+        console.error('Erro no envio:', result.error);
+        // Não limpar o formulário em caso de erro para que o usuário possa tentar novamente
+      }
+    } catch (error) {
+      toast.error('Erro temporário. Use o WhatsApp para contato direto.');
+      console.error('Erro ao enviar email:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -218,9 +241,19 @@ const Contato = () => {
                     size="lg"
                     className="w-full text-sm sm:text-base py-5 sm:py-6"
                     variant="default"
+                    disabled={isLoading}
                   >
-                    <Send className="w-4 h-4 mr-2" />
-                    {t('contact.form.submitButton')}
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2" />
+                        {t('contact.form.submitButton')}
+                      </>
+                    )}
                   </Button>
                 </form>
                 </div>
