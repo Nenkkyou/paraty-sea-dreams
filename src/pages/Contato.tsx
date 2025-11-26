@@ -65,7 +65,12 @@ const Contato = () => {
       const result = await sendContactEmail(data);
       
       if (result.success) {
-        toast.success(t('contact.form.successMessage'));
+        const isDevelopment = import.meta.env.DEV;
+        if (isDevelopment) {
+          toast.success(t('contact.form.successMessage'));
+        } else {
+          toast.success('Redirecionando para WhatsApp! Finalize seu contato por lá.');
+        }
         reset();
       } else {
         // Se o serviço falhar, mostrar mensagem específica mas não redirecionar

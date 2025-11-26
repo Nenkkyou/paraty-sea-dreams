@@ -52,8 +52,10 @@ npm run dev:server  # Backend na porta 3001
 
 ### **URLs:**
 - **Desenvolvimento:** http://localhost:8081
-- **Produção:** https://paraty-boat.web.app
+- **Produção Principal:** https://paratyboat.com.br
+- **Firebase Backup:** https://paraty-boat.web.app
 - **Backend Local:** http://localhost:3001
+- **Contato:** https://paratyboat.com.br/contato
 
 ---
 

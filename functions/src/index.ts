@@ -23,6 +23,8 @@ dotenv.config();
 // Configure CORS
 const corsHandler = cors({
   origin: [
+    "https://paratyboat.com.br",
+    "https://www.paratyboat.com.br",
     "https://paraty-boat.web.app",
     "https://paraty-boat.firebaseapp.com", 
     "http://localhost:8080",
@@ -156,7 +158,7 @@ export const sendEmail = onRequest(
                 
                 <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
                   <p style="color: #6b7280; margin: 0; font-size: 14px;">
-                    Email enviado automaticamente pelo site ParatyBoat
+                    Email enviado automaticamente pelo site <a href="https://paratyboat.com.br" style="color: #1e40af;">paratyboat.com.br</a>
                   </p>
                   <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 12px;">
                     ${new Date().toLocaleString("pt-BR")}
