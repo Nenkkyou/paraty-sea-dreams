@@ -11,8 +11,15 @@ const normalizeBaseUrl = (baseUrl?: string) => {
   return baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
 };
 
-const API_BASE_URL = normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL);
-const EMAIL_ENDPOINT = `${API_BASE_URL}/api/send-email`;
+// Check if we're in development or production
+const isDevelopment = import.meta.env.DEV;
+const API_BASE_URL = isDevelopment 
+  ? normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL) || ""
+  : "https://us-central1-paraty-boat.cloudfunctions.net";
+
+const EMAIL_ENDPOINT = isDevelopment 
+  ? `${API_BASE_URL}/api/send-email`
+  : `${API_BASE_URL}/sendEmail`;
 
 export const sendContactEmail = async (formData: ContactFormData) => {
   try {
