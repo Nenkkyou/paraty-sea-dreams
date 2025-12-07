@@ -53,12 +53,6 @@ const menuItems = [
     badge: 3,
   },
   {
-    title: "Embarcações",
-    icon: Ship,
-    path: "/admin/embarcacoes",
-    badge: null,
-  },
-  {
     title: "Clientes",
     icon: Users,
     path: "/admin/clientes",
@@ -113,7 +107,7 @@ const AdminLayout = () => {
         className={`
           fixed top-0 left-0 z-50 h-full bg-white dark:bg-gray-800 shadow-xl
           transition-all duration-300 ease-in-out
-          ${sidebarOpen ? "w-64" : "w-20"}
+          ${sidebarOpen ? "w-64" : "w-16 lg:w-20"}
           ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
@@ -207,7 +201,7 @@ const AdminLayout = () => {
       <div
         className={`
           transition-all duration-300
-          ${sidebarOpen ? "lg:ml-64" : "lg:ml-20"}
+          ${sidebarOpen ? "lg:ml-64" : "lg:ml-16 xl:lg:ml-20"}
         `}
       >
         {/* Top Header */}
@@ -224,11 +218,11 @@ const AdminLayout = () => {
               </button>
 
               {/* Search */}
-              <div className="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-xl px-4 py-2 w-80">
-                <Search className="w-5 h-5 text-gray-400" />
+              <div className="hidden lg:flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-xl px-4 py-2 w-64 xl:w-80">
+                <Search className="w-5 h-5 text-gray-400 shrink-0" />
                 <Input
                   type="text"
-                  placeholder="Buscar solicitações, clientes..."
+                  placeholder="Buscar..."
                   className="border-0 bg-transparent focus-visible:ring-0 px-0 placeholder:text-gray-400"
                 />
               </div>
@@ -308,7 +302,7 @@ const AdminLayout = () => {
         </header>
 
         {/* Page Content */}
-        <main className="p-6">
+        <main className="p-4 sm:p-6">
           <Outlet />
         </main>
       </div>
