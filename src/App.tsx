@@ -8,6 +8,20 @@ import Home from "./pages/Home";
 import Roteiros from "./pages/Roteiros";
 import Contato from "./pages/Contato";
 import NotFound from "./pages/NotFound";
+import { FirebaseExample } from "./components/FirebaseExample";
+
+// Admin Pages
+import {
+  AdminLogin,
+  AdminLayout,
+  AdminDashboard,
+  AdminSolicitacoes,
+  AdminReservas,
+  AdminEmbarcacoes,
+  AdminClientes,
+  AdminMonitor,
+  AdminConfiguracoes,
+} from "./pages/admin";
 
 const queryClient = new QueryClient();
 
@@ -18,13 +32,28 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Public Routes */}
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="/roteiros" element={<Roteiros />} />
             <Route path="/contato" element={<Contato />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+            <Route path="/firebase-teste" element={<FirebaseExample />} />
           </Route>
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="solicitacoes" element={<AdminSolicitacoes />} />
+            <Route path="reservas" element={<AdminReservas />} />
+            <Route path="embarcacoes" element={<AdminEmbarcacoes />} />
+            <Route path="clientes" element={<AdminClientes />} />
+            <Route path="monitor" element={<AdminMonitor />} />
+            <Route path="configuracoes" element={<AdminConfiguracoes />} />
+          </Route>
+
+          {/* 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
