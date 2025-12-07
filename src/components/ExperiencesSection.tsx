@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Anchor, Compass, Waves, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import content from "@/data/content.json";
 
 const iconMap = {
@@ -12,6 +13,15 @@ const iconMap = {
 };
 
 const ExperiencesSection = () => {
+  const { t } = useTranslation();
+
+  const experiences = [
+    { key: 'navegacao', icon: 'Anchor' },
+    { key: 'roteiros', icon: 'Compass' },
+    { key: 'aguas', icon: 'Waves' },
+    { key: 'conforto', icon: 'Sun' },
+  ];
+
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,19 +33,19 @@ const ExperiencesSection = () => {
           className="text-center mb-12 sm:mb-16"
         >
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4">
-            Experiências Exclusivas
+            {t('experiences.title')}
           </h2>
           <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto px-4">
-            Navegue pelas águas mais cristalinas de Paraty com conforto e estilo
+            {t('experiences.subtitle')}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-12">
-          {content.experiencias.map((exp, index) => {
-            const Icon = iconMap[exp.icone as keyof typeof iconMap];
+          {experiences.map((exp, index) => {
+            const Icon = iconMap[exp.icon as keyof typeof iconMap];
             return (
               <motion.div
-                key={index}
+                key={exp.key}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
@@ -47,10 +57,10 @@ const ExperiencesSection = () => {
                   <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-accent" />
                 </div>
                 <h3 className="font-display text-lg sm:text-xl font-semibold text-card-foreground mb-2 sm:mb-3">
-                  {exp.titulo}
+                  {t(`experiences.items.${exp.key}.title`)}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  {exp.descricao}
+                  {t(`experiences.items.${exp.key}.description`)}
                 </p>
               </motion.div>
             );
@@ -65,7 +75,7 @@ const ExperiencesSection = () => {
           className="flex justify-center"
         >
           <Button asChild size="lg" variant="default" className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6">
-            <Link to="/roteiros" onClick={() => window.scrollTo(0, 0)}>Conheça nossos Roteiros</Link>
+            <Link to="/roteiros" onClick={() => window.scrollTo(0, 0)}>{t('experiences.cta')}</Link>
           </Button>
         </motion.div>
       </div>

@@ -1,0 +1,118 @@
+{
+  "header": {
+    "inicio": "Início",
+    "roteiros": "Roteiros",
+    "contato": "Entre em Contato"
+  },
+  "hero": {
+    "slide1Title": "Descubra Paraty pelo Mar",
+    "slide1Subtitle": "Navegue com Conforto e Liberdade",
+    "slide2Title": "Águas Cristalinas",
+    "slide2Subtitle": "Praias Paradisíacas à Sua Espera",
+    "slide3Title": "Experiências Exclusivas",
+    "slide3Subtitle": "Roteiros Personalizados para Você",
+    "slide4Title": "Momentos Inesquecíveis",
+    "slide4Subtitle": "Crie Memórias que Duram para Sempre",
+    "slide5Title": "Conforto e Estilo",
+    "slide5Subtitle": "A Lancha dos Seus Sonhos em Paraty",
+    "cta": "Conheça nossos Roteiros",
+    "prevButton": "Imagem anterior",
+    "nextButton": "Próxima imagem",
+    "goToSlide": "Ir para slide"
+  },
+  "experiences": {
+    "title": "Experiências Exclusivas",
+    "subtitle": "Navegue pelas águas mais cristalinas de Paraty com conforto e estilo",
+    "cta": "Conheça nossos Roteiros",
+    "items": {
+      "navegacao": {
+        "title": "Navegação Exclusiva",
+        "description": "Lanchas modernas e confortáveis para sua experiência perfeita no mar"
+      },
+      "roteiros": {
+        "title": "Roteiros Personalizados",
+        "description": "Escolha seu destino e crie memórias inesquecíveis pelas águas de Paraty"
+      },
+      "aguas": {
+        "title": "Águas Cristalinas",
+        "description": "Explore praias paradisíacas e enseadas de beleza incomparável"
+      },
+      "conforto": {
+        "title": "Conforto Total",
+        "description": "Aproveite cada momento com todo o conforto e segurança que você merece"
+      }
+    }
+  },
+  "routes": {
+    "pageTitle": "Nossos Roteiros",
+    "pageSubtitle": "Escolha entre os destinos mais espetaculares de Paraty e embarque em uma jornada inesquecível pelas águas cristalinas da costa do Rio de Janeiro",
+    "breadcrumbHome": "Início",
+    "breadcrumbCurrent": "Roteiros",
+    "items": {
+      "sacoMamangua": {
+        "nome": "Saco do Mamanguá",
+        "descricao": "Navegue pelo único fiorde tropical do Brasil. Paisagens deslumbrantes cercadas por montanhas cobertas de mata atlântica."
+      },
+      "ilhaPelado": {
+        "nome": "Ilha do Pelado",
+        "descricao": "Descubra uma das ilhas mais charmosas da região com praias de águas transparentes e areia branca. Perfeita para mergulho e relaxamento."
+      },
+      "ilhaCedro": {
+        "nome": "Ilha do Cedro",
+        "descricao": "Ilha paradisíaca com vegetação preservada e enseadas secretas. Um verdadeiro refúgio de tranquilidade e beleza natural."
+      },
+      "ilhaMantimentos": {
+        "nome": "Ilha dos Mantimentos",
+        "descricao": "Explore praias isoladas e águas cristalinas nesta ilha encantadora. Ideal para quem busca privacidade e contato com a natureza."
+      },
+      "lagoaVerde": {
+        "nome": "Lagoa Verde",
+        "descricao": "Lagoa de águas cristalinas e cor esmeralda cercada por natureza exuberante. Um paraíso escondido perfeito para mergulho e contemplação."
+      },
+      "apreciacaoFundoMar": {
+        "nome": "Apreciação do Fundo do Mar",
+        "descricao": "Mergulhe nas águas cristalinas de Paraty e explore a rica vida marinha. Perfeito para snorkeling e contemplação da biodiversidade subaquática."
+      },
+      "praiaEngenho": {
+        "nome": "Praia do Engenho",
+        "descricao": "Praia histórica cercada por natureza exuberante. Combine história, cultura e belezas naturais em um único destino."
+      },
+      "praiaCrepusculo": {
+        "nome": "Praia do Crepúsculo",
+        "descricao": "Famosa por seus pores do sol espetaculares. Viva momentos mágicos enquanto o sol se põe sobre as águas tranquilas de Paraty."
+      },
+      "passeioPersonalizado": {
+        "nome": "Passeio Personalizado",
+        "descricao": "Crie sua própria aventura! Monte um roteiro exclusivo de acordo com suas preferências, escolhendo os destinos, atividades e duração do passeio."
+      }
+    }
+  },
+  "contact": {
+    "title": "Entre em Contato",
+    "subtitle": "Reserve seu passeio e descubra Paraty do mar. Nossa equipe está pronta para criar a experiência perfeita para você.",
+    "feature1": "Atendimento personalizado",
+    "feature2": "Roteiros flexíveis",
+    "feature3": "Lanchas modernas e confortáveis",
+    "feature4": "Equipe experiente",
+    "form": {
+      "nameLabel": "Nome completo",
+      "emailLabel": "E-mail",
+      "phoneLabel": "Telefone",
+      "routeLabel": "Roteiro de Interesse",
+      "routePlaceholder": "Selecione um roteiro",
+      "routeOther": "Outro",
+      "messageLabel": "Mensagem",
+      "submitButton": "Enviar Mensagem",
+      "nameRequired": "Nome deve ter pelo menos 2 caracteres",
+      "emailInvalid": "E-mail inválido",
+      "phoneInvalid": "Telefone inválido",
+      "routeRequired": "Roteiro é obrigatório",
+      "messageRequired": "Mensagem deve ter pelo menos 10 caracteres",
+      "successMessage": "Mensagem enviada com sucesso! Entraremos em contato em breve."
+    }
+  },
+  "footer": {
+    "description": "Passeios de lancha exclusivos em Paraty-RJ. Descubra o paraíso navegando pelas águas cristalinas do litoral fluminense.",
+    "copyright": "© {{year}} ParatyBoat. Todos os direitos reservados."
+  }
+}

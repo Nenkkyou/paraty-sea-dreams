@@ -1,0 +1,118 @@
+{
+  "header": {
+    "inicio": "Home",
+    "roteiros": "Tours",
+    "contato": "Contact Us"
+  },
+  "hero": {
+    "slide1Title": "Discover Paraty by Sea",
+    "slide1Subtitle": "Navigate with Comfort and Freedom",
+    "slide2Title": "Crystal Clear Waters",
+    "slide2Subtitle": "Paradisiacal Beaches Await You",
+    "slide3Title": "Exclusive Experiences",
+    "slide3Subtitle": "Personalized Tours Just for You",
+    "slide4Title": "Unforgettable Moments",
+    "slide4Subtitle": "Create Memories that Last Forever",
+    "slide5Title": "Comfort and Style",
+    "slide5Subtitle": "The Boat of Your Dreams in Paraty",
+    "cta": "Explore Our Tours",
+    "prevButton": "Previous image",
+    "nextButton": "Next image",
+    "goToSlide": "Go to slide"
+  },
+  "experiences": {
+    "title": "Exclusive Experiences",
+    "subtitle": "Navigate through the most crystal clear waters of Paraty with comfort and style",
+    "cta": "Explore Our Tours",
+    "items": {
+      "navegacao": {
+        "title": "Exclusive Navigation",
+        "description": "Modern and comfortable boats for your perfect experience at sea"
+      },
+      "roteiros": {
+        "title": "Personalized Tours",
+        "description": "Choose your destination and create unforgettable memories through the waters of Paraty"
+      },
+      "aguas": {
+        "title": "Crystal Clear Waters",
+        "description": "Explore paradisiacal beaches and coves of incomparable beauty"
+      },
+      "conforto": {
+        "title": "Total Comfort",
+        "description": "Enjoy every moment with all the comfort and safety you deserve"
+      }
+    }
+  },
+  "routes": {
+    "pageTitle": "Our Tours",
+    "pageSubtitle": "Choose from the most spectacular destinations in Paraty and embark on an unforgettable journey through the crystal clear waters of the Rio de Janeiro coast",
+    "breadcrumbHome": "Home",
+    "breadcrumbCurrent": "Tours",
+    "items": {
+      "sacoMamangua": {
+        "nome": "Saco do Mamanguá",
+        "descricao": "Navigate through Brazil's only tropical fjord. Stunning landscapes surrounded by mountains covered with Atlantic rainforest."
+      },
+      "ilhaPelado": {
+        "nome": "Pelado Island",
+        "descricao": "Discover one of the most charming islands in the region with transparent waters and white sand beaches. Perfect for diving and relaxation."
+      },
+      "ilhaCedro": {
+        "nome": "Cedro Island",
+        "descricao": "Paradisiacal island with preserved vegetation and secret coves. A true refuge of tranquility and natural beauty."
+      },
+      "ilhaMantimentos": {
+        "nome": "Mantimentos Island",
+        "descricao": "Explore isolated beaches and crystal clear waters on this enchanting island. Ideal for those seeking privacy and contact with nature."
+      },
+      "lagoaVerde": {
+        "nome": "Green Lagoon",
+        "descricao": "Lagoon with crystal clear emerald waters surrounded by lush nature. A hidden paradise perfect for diving and contemplation."
+      },
+      "apreciacaoFundoMar": {
+        "nome": "Seabed Appreciation",
+        "descricao": "Dive into the crystal clear waters of Paraty and explore the rich marine life. Perfect for snorkeling and observing underwater biodiversity."
+      },
+      "praiaEngenho": {
+        "nome": "Engenho Beach",
+        "descricao": "Historic beach surrounded by lush nature. Combine history, culture and natural beauties in a single destination."
+      },
+      "praiaCrepusculo": {
+        "nome": "Crepúsculo Beach",
+        "descricao": "Famous for its spectacular sunsets. Experience magical moments as the sun sets over the tranquil waters of Paraty."
+      },
+      "passeioPersonalizado": {
+        "nome": "Personalized Tour",
+        "descricao": "Create your own adventure! Design an exclusive itinerary according to your preferences, choosing destinations, activities, and tour duration."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Book your tour and discover Paraty from the sea. Our team is ready to create the perfect experience for you.",
+    "feature1": "Personalized service",
+    "feature2": "Flexible itineraries",
+    "feature3": "Modern and comfortable boats",
+    "feature4": "Experienced crew",
+    "form": {
+      "nameLabel": "Full name",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "routeLabel": "Tour of Interest",
+      "routePlaceholder": "Select a tour",
+      "routeOther": "Other",
+      "messageLabel": "Message",
+      "submitButton": "Send Message",
+      "nameRequired": "Name must be at least 2 characters",
+      "emailInvalid": "Invalid email",
+      "phoneInvalid": "Invalid phone",
+      "routeRequired": "Tour is required",
+      "messageRequired": "Message must be at least 10 characters",
+      "successMessage": "Message sent successfully! We will contact you shortly."
+    }
+  },
+  "footer": {
+    "description": "Exclusive boat tours in Paraty-RJ. Discover paradise by navigating through the crystal clear waters of the Rio de Janeiro coast.",
+    "copyright": "© {{year}} ParatyBoat. All rights reserved."
+  }
+}

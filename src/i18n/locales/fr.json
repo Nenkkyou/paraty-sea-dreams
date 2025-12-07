@@ -1,0 +1,118 @@
+{
+  "header": {
+    "inicio": "Accueil",
+    "roteiros": "Circuits",
+    "contato": "Nous Contacter"
+  },
+  "hero": {
+    "slide1Title": "Découvrez Paraty par la Mer",
+    "slide1Subtitle": "Naviguez avec Confort et Liberté",
+    "slide2Title": "Eaux Cristallines",
+    "slide2Subtitle": "Des Plages Paradisiaques vous Attendent",
+    "slide3Title": "Expériences Exclusives",
+    "slide3Subtitle": "Circuits Personnalisés pour Vous",
+    "slide4Title": "Moments Inoubliables",
+    "slide4Subtitle": "Créez des Souvenirs qui Durent Toujours",
+    "slide5Title": "Confort et Style",
+    "slide5Subtitle": "Le Bateau de vos Rêves à Paraty",
+    "cta": "Découvrez nos Circuits",
+    "prevButton": "Image précédente",
+    "nextButton": "Image suivante",
+    "goToSlide": "Aller à la diapositive"
+  },
+  "experiences": {
+    "title": "Expériences Exclusives",
+    "subtitle": "Naviguez sur les eaux les plus cristallines de Paraty avec confort et style",
+    "cta": "Découvrez nos Circuits",
+    "items": {
+      "navegacao": {
+        "title": "Navigation Exclusive",
+        "description": "Bateaux modernes et confortables pour votre expérience parfaite en mer"
+      },
+      "roteiros": {
+        "title": "Circuits Personnalisés",
+        "description": "Choisissez votre destination et créez des souvenirs inoubliables sur les eaux de Paraty"
+      },
+      "aguas": {
+        "title": "Eaux Cristallines",
+        "description": "Explorez des plages paradisiaques et des criques d'une beauté incomparable"
+      },
+      "conforto": {
+        "title": "Confort Total",
+        "description": "Profitez de chaque instant avec tout le confort et la sécurité que vous méritez"
+      }
+    }
+  },
+  "routes": {
+    "pageTitle": "Nos Circuits",
+    "pageSubtitle": "Choisissez parmi les destinations les plus spectaculaires de Paraty et embarquez pour un voyage inoubliable à travers les eaux cristallines de la côte de Rio de Janeiro",
+    "breadcrumbHome": "Accueil",
+    "breadcrumbCurrent": "Circuits",
+    "items": {
+      "sacoMamangua": {
+        "nome": "Saco do Mamanguá",
+        "descricao": "Naviguez à travers le seul fjord tropical du Brésil. Paysages époustouflants entourés de montagnes couvertes de forêt atlantique."
+      },
+      "ilhaPelado": {
+        "nome": "Île de Pelado",
+        "descricao": "Découvrez l'une des îles les plus charmantes de la région avec des eaux transparentes et des plages de sable blanc. Parfaite pour la plongée et la détente."
+      },
+      "ilhaCedro": {
+        "nome": "Île de Cedro",
+        "descricao": "Île paradisiaque avec une végétation préservée et des criques secrètes. Un véritable refuge de tranquillité et de beauté naturelle."
+      },
+      "ilhaMantimentos": {
+        "nome": "Île des Mantimentos",
+        "descricao": "Explorez des plages isolées et des eaux cristallines sur cette île enchanteresse. Idéal pour ceux qui recherchent l'intimité et le contact avec la nature."
+      },
+      "lagoaVerde": {
+        "nome": "Lagon Vert",
+        "descricao": "Lagon aux eaux cristallines couleur émeraude entouré d'une nature luxuriante. Un paradis caché parfait pour la plongée et la contemplation."
+      },
+      "apreciacaoFundoMar": {
+        "nome": "Appréciation des Fonds Marins",
+        "descricao": "Plongez dans les eaux cristallines de Paraty et explorez la riche vie marine. Parfait pour le snorkeling et l'observation de la biodiversité sous-marine."
+      },
+      "praiaEngenho": {
+        "nome": "Plage d'Engenho",
+        "descricao": "Plage historique entourée d'une nature luxuriante. Combinez histoire, culture et beautés naturelles en une seule destination."
+      },
+      "praiaCrepusculo": {
+        "nome": "Plage du Crépuscule",
+        "descricao": "Célèbre pour ses couchers de soleil spectaculaires. Vivez des moments magiques pendant que le soleil se couche sur les eaux tranquilles de Paraty."
+      },
+      "passeioPersonalizado": {
+        "nome": "Circuit Personnalisé",
+        "descricao": "Créez votre propre aventure ! Concevez un itinéraire exclusif selon vos préférences, en choisissant les destinations, les activités et la durée de l'excursion."
+      }
+    }
+  },
+  "contact": {
+    "title": "Nous Contacter",
+    "subtitle": "Réservez votre excursion et découvrez Paraty depuis la mer. Notre équipe est prête à créer l'expérience parfaite pour vous.",
+    "feature1": "Service personnalisé",
+    "feature2": "Itinéraires flexibles",
+    "feature3": "Bateaux modernes et confortables",
+    "feature4": "Équipe expérimentée",
+    "form": {
+      "nameLabel": "Nom complet",
+      "emailLabel": "Email",
+      "phoneLabel": "Téléphone",
+      "routeLabel": "Circuit d'Intérêt",
+      "routePlaceholder": "Sélectionnez un circuit",
+      "routeOther": "Autre",
+      "messageLabel": "Message",
+      "submitButton": "Envoyer le Message",
+      "nameRequired": "Le nom doit contenir au moins 2 caractères",
+      "emailInvalid": "Email invalide",
+      "phoneInvalid": "Téléphone invalide",
+      "routeRequired": "Le circuit est requis",
+      "messageRequired": "Le message doit contenir au moins 10 caractères",
+      "successMessage": "Message envoyé avec succès ! Nous vous contacterons bientôt."
+    }
+  },
+  "footer": {
+    "description": "Excursions exclusives en bateau à Paraty-RJ. Découvrez le paradis en naviguant sur les eaux cristallines de la côte de Rio de Janeiro.",
+    "copyright": "© {{year}} ParatyBoat. Tous droits réservés."
+  }
+}
