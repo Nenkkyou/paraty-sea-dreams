@@ -56,7 +56,7 @@ export const sendReplyEmail = async (data: ReplyEmailData): Promise<{ success: b
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: `Paraty Boat <onboarding@resend.dev>`,
+        from: `Paraty Boat <contato@paratyboat.com.br>`,
         to: [data.to],
         subject: data.subject,
         html: `
