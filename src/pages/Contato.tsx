@@ -55,48 +55,78 @@ const Contato = () => {
     { key: 'outro', label: 'Outro' },
   ];
 
+  // Função auxiliar para redirecionar para WhatsApp
+  const redirectToWhatsApp = (data: FormData) => {
+    const routeLabel = routesOptions.find(r => r.key === data.roteiro)?.label || data.roteiro;
+    const whatsappMessage = encodeURIComponent(
+      `Olá! Vim pelo site e gostaria de informações sobre o roteiro: ${routeLabel}\n\n` +
+      `Nome: ${data.nome}\n` +
+      `Email: ${data.email}\n` +
+      `Telefone: ${data.telefone}\n\n` +
+      `Mensagem: ${data.mensagem}`
+    );
+    window.open(`https://wa.me/5511982448956?text=${whatsappMessage}`, '_blank');
+  };
+
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     
     try {
       console.log("Form data:", data);
       
+      // Timeout de 10 segundos para evitar loading infinito
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('TIMEOUT')), 10000);
+      });
+      
       // Salvar solicitação no Firestore para o painel admin
       try {
-        await createSolicitation({
-          name: data.nome,
-          email: data.email,
-          phone: data.telefone,
-          subject: `Interesse em: ${routesOptions.find(r => r.key === data.roteiro)?.label || data.roteiro}`,
-          message: data.mensagem,
-          type: 'reservation',
-          status: 'pending',
-          route: routesOptions.find(r => r.key === data.roteiro)?.label || null,
-          starred: false,
-          source: 'website',
-        });
+        await Promise.race([
+          createSolicitation({
+            name: data.nome,
+            email: data.email,
+            phone: data.telefone,
+            subject: `Interesse em: ${routesOptions.find(r => r.key === data.roteiro)?.label || data.roteiro}`,
+            message: data.mensagem,
+            type: 'reservation',
+            status: 'pending',
+            route: routesOptions.find(r => r.key === data.roteiro)?.label || null,
+            starred: false,
+            source: 'website',
+          }),
+          timeoutPromise
+        ]);
         console.log("Solicitação salva no Firestore");
         
         // Sucesso! A solicitação foi salva e o admin vai ver no painel
         toast.success("Solicitação enviada com sucesso! Entraremos em contato em breve.");
         reset();
-      } catch (firestoreError) {
+      } catch (firestoreError: unknown) {
         console.error("Erro ao salvar no Firestore:", firestoreError);
-        // Se falhar o Firestore, redirecionar para WhatsApp
-        const routeLabel = routesOptions.find(r => r.key === data.roteiro)?.label || data.roteiro;
-        const whatsappMessage = encodeURIComponent(
-          `Olá! Vim pelo site e gostaria de informações sobre o roteiro: ${routeLabel}\n\n` +
-          `Nome: ${data.nome}\n` +
-          `Email: ${data.email}\n` +
-          `Telefone: ${data.telefone}\n\n` +
-          `Mensagem: ${data.mensagem}`
-        );
-        toast.info("Redirecionando para o WhatsApp...");
-        window.open(`https://wa.me/5511982448956?text=${whatsappMessage}`, '_blank');
+        
+        // Detectar se é erro de bloqueador de anúncios ou timeout
+        const errorMessage = firestoreError instanceof Error ? firestoreError.message : String(firestoreError);
+        const isBlocked = errorMessage.includes('BLOCKED') || 
+                          errorMessage.includes('network') || 
+                          errorMessage.includes('Failed to fetch') ||
+                          errorMessage.includes('TIMEOUT');
+        
+        if (isBlocked) {
+          toast.warning("Detectamos um bloqueio de conexão. Redirecionando para WhatsApp...", {
+            description: "Desative o AdBlock ou use o WhatsApp diretamente."
+          });
+        } else {
+          toast.info("Redirecionando para o WhatsApp...");
+        }
+        
+        redirectToWhatsApp(data);
+        reset();
       }
     } catch (error) {
-      toast.error('Erro temporário. Use o WhatsApp para contato direto.');
       console.error('Erro ao processar formulário:', error);
+      toast.error('Erro temporário. Redirecionando para WhatsApp...');
+      redirectToWhatsApp(data);
+      reset();
     } finally {
       setIsLoading(false);
     }

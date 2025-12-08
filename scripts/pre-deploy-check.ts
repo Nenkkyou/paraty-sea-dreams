@@ -194,6 +194,115 @@ async function checkCodeQuality(): Promise<void> {
 }
 
 // ============================================
+// 4.1 VERIFICAR FORMULÁRIOS E HANDLERS
+// ============================================
+async function checkFormHandlers(): Promise<void> {
+  log.title('VERIFICANDO FORMULÁRIOS E HANDLERS');
+  
+  const contatoPath = path.join(process.cwd(), 'src', 'pages', 'Contato.tsx');
+  
+  if (!fs.existsSync(contatoPath)) {
+    log.error('Contato.tsx não encontrado');
+    errors.push('Arquivo de contato não existe');
+    return;
+  }
+  
+  const content = fs.readFileSync(contatoPath, 'utf-8');
+  
+  // Verificar se tem timeout para evitar loading infinito
+  if (content.includes('setTimeout') || content.includes('Promise.race') || content.includes('timeoutPromise')) {
+    log.success('Formulário tem proteção contra timeout');
+  } else {
+    log.error('Formulário NÃO tem timeout! Pode ficar carregando infinitamente');
+    errors.push('Adicionar timeout no handler do formulário de contato');
+  }
+  
+  // Verificar se tem fallback para WhatsApp
+  if (content.includes('wa.me') || content.includes('whatsapp')) {
+    log.success('Formulário tem fallback para WhatsApp');
+  } else {
+    log.warning('Formulário não tem fallback para WhatsApp');
+    warnings.push('Considerar adicionar fallback para WhatsApp');
+  }
+  
+  // Verificar se trata erros de rede/AdBlock
+  if (content.includes('BLOCKED') || content.includes('Failed to fetch') || content.includes('network')) {
+    log.success('Formulário trata erros de bloqueio/rede');
+  } else {
+    log.warning('Formulário pode não tratar erros de AdBlock');
+    warnings.push('Adicionar tratamento para ERR_BLOCKED_BY_CLIENT');
+  }
+  
+  // Verificar se setIsLoading(false) está no finally
+  if (content.includes('finally') && content.includes('setIsLoading(false)')) {
+    log.success('Loading state é resetado corretamente');
+  } else {
+    log.error('Loading state pode não ser resetado em caso de erro!');
+    errors.push('Garantir setIsLoading(false) no bloco finally');
+  }
+}
+
+// ============================================
+// 4.2 VERIFICAR SERVIÇOS E CORS
+// ============================================
+async function checkServicesAndCORS(): Promise<void> {
+  log.title('VERIFICANDO SERVIÇOS E CORS');
+  
+  const servicesDir = path.join(process.cwd(), 'src', 'services');
+  
+  if (!fs.existsSync(servicesDir)) {
+    log.warning('Pasta services não encontrada');
+    return;
+  }
+  
+  // Verificar solicitationService
+  const solicitationPath = path.join(servicesDir, 'solicitationService.ts');
+  if (fs.existsSync(solicitationPath)) {
+    const content = fs.readFileSync(solicitationPath, 'utf-8');
+    
+    if (content.includes('addDoc') || content.includes('setDoc')) {
+      log.success('solicitationService usa Firestore corretamente');
+    }
+    
+    if (content.includes('try') && content.includes('catch')) {
+      log.success('solicitationService tem tratamento de erros');
+    } else {
+      log.warning('solicitationService pode não ter tratamento de erros adequado');
+    }
+  }
+  
+  // Verificar emailService
+  const emailServicePath = path.join(servicesDir, 'emailService.ts');
+  if (fs.existsSync(emailServicePath)) {
+    const content = fs.readFileSync(emailServicePath, 'utf-8');
+    
+    // Verificar domínios CORS
+    if (content.includes('paratyboat.com.br') || content.includes('localhost')) {
+      log.success('emailService tem domínios CORS configurados');
+    } else {
+      log.warning('Verificar configuração de CORS no emailService');
+    }
+  }
+  
+  // Verificar Cloud Functions (se existir)
+  const functionsPath = path.join(process.cwd(), 'functions', 'src', 'index.ts');
+  if (fs.existsSync(functionsPath)) {
+    const content = fs.readFileSync(functionsPath, 'utf-8');
+    
+    if (content.includes('cors')) {
+      log.success('Cloud Functions tem CORS configurado');
+      
+      if (!content.includes('paratyboat.com.br')) {
+        log.warning('CORS das Cloud Functions não inclui paratyboat.com.br');
+        warnings.push('Adicionar paratyboat.com.br ao CORS das Cloud Functions');
+      }
+    } else {
+      log.warning('Cloud Functions pode não ter CORS configurado');
+    }
+  }
+}
+
+// ============================================
 // 5. VERIFICAR SE O BUILD FUNCIONA
 // ============================================
 async function checkBuild(): Promise<void> {
@@ -283,6 +392,72 @@ async function testFirebaseConnection(): Promise<void> {
 }
 
 // ============================================
+// 7. VERIFICAR ROTAS E NAVEGAÇÃO
+// ============================================
+async function checkRoutes(): Promise<void> {
+  log.title('VERIFICANDO ROTAS E NAVEGAÇÃO');
+  
+  const appPath = path.join(process.cwd(), 'src', 'App.tsx');
+  
+  if (!fs.existsSync(appPath)) {
+    log.error('App.tsx não encontrado');
+    errors.push('Arquivo App.tsx não existe');
+    return;
+  }
+  
+  const content = fs.readFileSync(appPath, 'utf-8');
+  
+  // Verificar rotas admin
+  if (content.includes('path="/admin"') || content.includes("path='/admin'")) {
+    log.success('Rotas admin configuradas');
+    
+    // Verificar se tem index route
+    if (content.includes('<Route index') || content.includes('element={<AdminLogin')) {
+      log.success('Rota index do admin configurada');
+    } else {
+      log.warning('Rota index do admin pode não estar configurada');
+      warnings.push('Verificar rota index para /admin');
+    }
+  }
+  
+  // Verificar NotFound
+  if (content.includes('path="*"') || content.includes("path='*'")) {
+    log.success('Rota 404 (NotFound) configurada');
+  } else {
+    log.warning('Não há rota 404 configurada');
+    warnings.push('Adicionar rota para página não encontrada');
+  }
+}
+
+// ============================================
+// 8. AVISOS IMPORTANTES PARA PRODUÇÃO
+// ============================================
+async function showProductionWarnings(): Promise<void> {
+  log.title('AVISOS IMPORTANTES PARA PRODUÇÃO');
+  
+  console.log(`
+${colors.yellow}${colors.bold}⚠️  LEMBRE-SE:${colors.reset}
+
+${colors.cyan}1. AdBlockers podem bloquear Firebase:${colors.reset}
+   - O erro "ERR_BLOCKED_BY_CLIENT" é causado por AdBlockers
+   - O formulário já tem fallback para WhatsApp
+   - Usuários com AdBlock serão redirecionados automaticamente
+
+${colors.cyan}2. Cloud Functions:${colors.reset}
+   - Se aparecer erro de Cloud Functions, é porque precisa do plano Blaze
+   - O formulário já funciona apenas com Firestore (sem Cloud Functions)
+
+${colors.cyan}3. Domínios autorizados:${colors.reset}
+   - Certifique-se que paratyboat.com.br está autorizado no Firebase Console
+   - Caminho: Authentication > Settings > Authorized domains
+
+${colors.cyan}4. CORS:${colors.reset}
+   - Se houver erro de CORS, verifique as Cloud Functions
+   - Domínios permitidos: localhost, paratyboat.com.br
+`);
+}
+
+// ============================================
 // MAIN
 // ============================================
 async function main() {
@@ -296,8 +471,12 @@ ${colors.bold}${colors.cyan}╔════════════════�
   await checkFirebaseConfig();
   await checkDeployFiles();
   await checkCodeQuality();
+  await checkFormHandlers();
+  await checkServicesAndCORS();
   await checkBuild();
   await testFirebaseConnection();
+  await checkRoutes();
+  await showProductionWarnings();
 
   // Resumo final
   console.log(`

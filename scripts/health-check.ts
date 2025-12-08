@@ -323,15 +323,102 @@ async function checkResendConnection(): Promise<CheckResult> {
     return {
       name: 'Resend API',
       status: 'warning',
-      message: `Status: ${response.status}`,
-      details: 'Resposta inesperada do servidor'
+      message: `Resposta inesperada: ${response.status}`,
+      details: 'Verifique a configuração do Resend'
     };
   } catch (error) {
     return {
       name: 'Resend API',
       status: 'warning',
-      message: 'Não foi possível verificar conectividade',
-      details: error instanceof Error ? error.message : 'Erro de rede'
+      message: 'Erro ao conectar',
+      details: error instanceof Error ? error.message : 'Erro desconhecido'
+    };
+  }
+}
+
+/**
+ * Teste REAL de escrita/leitura no Firestore
+ * Isso detecta problemas de permissão que a verificação simples não pega
+ */
+async function checkFirestoreWritePermission(): Promise<CheckResult> {
+  const apiKey = process.env.VITE_FIREBASE_API_KEY;
+  const projectId = process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID;
+  
+  if (!apiKey || !projectId) {
+    return {
+      name: 'Firestore Escrita',
+      status: 'warning',
+      message: 'Credenciais não configuradas',
+      details: 'Configure VITE_FIREBASE_API_KEY e VITE_FIREBASE_PROJECT_ID'
+    };
+  }
+  
+  try {
+    // Tentar criar um documento de teste usando a REST API do Firestore
+    const testDocId = `health_check_${Date.now()}`;
+    const testData = {
+      fields: {
+        test: { stringValue: 'health_check' },
+        timestamp: { integerValue: Date.now().toString() },
+        source: { stringValue: 'health-check-script' }
+      }
+    };
+    
+    // POST para criar documento
+    const createUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/_health_checks?documentId=${testDocId}&key=${apiKey}`;
+    
+    const createResponse = await fetch(createUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(testData)
+    });
+    
+    if (createResponse.status === 403) {
+      return {
+        name: 'Firestore Escrita',
+        status: 'error',
+        message: 'PERMISSÃO NEGADA - Regras de segurança bloqueando',
+        details: 'Configure as regras do Firestore no Console Firebase para permitir escrita'
+      };
+    }
+    
+    if (createResponse.status === 400) {
+      const errorData = await createResponse.json();
+      return {
+        name: 'Firestore Escrita',
+        status: 'error',
+        message: 'Erro de configuração',
+        details: errorData?.error?.message || 'Verifique a API Key e Project ID'
+      };
+    }
+    
+    if (!createResponse.ok) {
+      return {
+        name: 'Firestore Escrita',
+        status: 'warning',
+        message: `Resposta inesperada: ${createResponse.status}`,
+        details: 'Verifique as configurações do Firebase'
+      };
+    }
+    
+    // Sucesso! Agora deletar o documento de teste
+    const deleteUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/_health_checks/${testDocId}?key=${apiKey}`;
+    await fetch(deleteUrl, { method: 'DELETE' });
+    
+    return {
+      name: 'Firestore Escrita',
+      status: 'success',
+      message: 'Escrita e leitura funcionando',
+      details: 'Documento de teste criado e removido com sucesso'
+    };
+  } catch (error) {
+    return {
+      name: 'Firestore Escrita',
+      status: 'error',
+      message: 'Erro ao testar escrita',
+      details: error instanceof Error ? error.message : 'Erro de rede ou configuração'
     };
   }
 }
@@ -456,6 +543,11 @@ async function runHealthCheck(): Promise<HealthReport> {
   const storageCheck = await checkFirebaseStorageBucket();
   checks.push(storageCheck);
   logCheck(storageCheck);
+  
+  // NOVO: Teste de escrita real no Firestore
+  const firestoreWriteCheck = await checkFirestoreWritePermission();
+  checks.push(firestoreWriteCheck);
+  logCheck(firestoreWriteCheck);
   
   const resendConn = await checkResendConnection();
   checks.push(resendConn);
