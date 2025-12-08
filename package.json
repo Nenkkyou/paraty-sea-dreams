@@ -13,7 +13,9 @@
     "preview": "vite preview",
     "db:health": "npx tsx scripts/health-check.ts",
     "screen:check": "concurrently -k -s first \"vite --port 5199\" \"npx wait-on http://localhost:5199 && npx tsx scripts/screen-check.ts\"",
-    "front:back": "npx tsx scripts/front-back-check.ts || echo."
+    "front:back": "npx tsx scripts/front-back-check.ts || echo.",
+    "predeploy": "npx tsx scripts/pre-deploy-check.ts",
+    "deploy:check": "npx tsx scripts/pre-deploy-check.ts && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
