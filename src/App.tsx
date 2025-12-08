@@ -60,15 +60,17 @@ const App = () => {
             </Route>
 
             {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="solicitacoes" element={<AdminSolicitacoes />} />
-              <Route path="reservas" element={<AdminReservas />} />
-              <Route path="embarcacoes" element={<AdminEmbarcacoes />} />
-              <Route path="clientes" element={<AdminClientes />} />
-              <Route path="monitor" element={<AdminMonitor />} />
-              <Route path="configuracoes" element={<AdminConfiguracoes />} />
+            <Route path="/admin">
+              <Route index element={<AdminLogin />} />
+              <Route element={<AdminGuard><AdminLayout /></AdminGuard>}>
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="solicitacoes" element={<AdminSolicitacoes />} />
+                <Route path="reservas" element={<AdminReservas />} />
+                <Route path="embarcacoes" element={<AdminEmbarcacoes />} />
+                <Route path="clientes" element={<AdminClientes />} />
+                <Route path="monitor" element={<AdminMonitor />} />
+                <Route path="configuracoes" element={<AdminConfiguracoes />} />
+              </Route>
             </Route>
 
           {/* 404 */}
