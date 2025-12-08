@@ -24,9 +24,14 @@ dotenv.config();
 const corsHandler = cors({
   origin: [
     "https://paraty-boat.web.app",
-    "https://paraty-boat.firebaseapp.com", 
+    "https://paraty-boat.firebaseapp.com",
+    "https://paratyboat.com.br",
+    "https://www.paratyboat.com.br",
+    "http://paratyboat.com.br",
+    "http://www.paratyboat.com.br",
     "http://localhost:8080",
-    "http://localhost:8081"
+    "http://localhost:8081",
+    "http://localhost:5173"
   ],
   credentials: true,
 });
