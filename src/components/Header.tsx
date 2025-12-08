@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Settings } from "lucide-react";
 import logo from "@/assets/logo.png";
 import LanguageSelector from "./LanguageSelector";
 
@@ -53,6 +54,12 @@ const Header = () => {
             <Link to="/contato" onClick={() => window.scrollTo(0, 0)}>
               <span className="hidden xs:inline">{t('header.contato')}</span>
               <span className="xs:hidden">Contato</span>
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm" className="font-medium text-xs sm:text-sm px-2 sm:px-4 bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white">
+            <Link to="/admin">
+              <Settings className="w-4 h-4 sm:mr-1" />
+              <span className="hidden sm:inline">Admin</span>
             </Link>
           </Button>
         </div>
