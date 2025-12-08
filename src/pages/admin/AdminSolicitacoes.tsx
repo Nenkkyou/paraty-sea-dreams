@@ -429,7 +429,15 @@ const AdminSolicitacoes = () => {
                             Marcar como confirmado
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem 
+                            className="text-red-600 cursor-pointer"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              if (window.confirm(`Tem certeza que deseja excluir a solicitação de ${request.name}?`)) {
+                                await remove(request.id);
+                              }
+                            }}
+                          >
                             <Trash2 className="w-4 h-4 mr-2" />
                             Excluir
                           </DropdownMenuItem>
@@ -542,6 +550,24 @@ const AdminSolicitacoes = () => {
                     <Button variant="outline" className="flex-1 border-border dark:border-slate-700 hover:bg-muted dark:hover:bg-slate-800">
                       <Reply className="w-4 h-4 mr-2" />
                       Responder
+                    </Button>
+                  </div>
+                  
+                  {/* Delete Button */}
+                  <div className="pt-4 border-t border-border dark:border-slate-700">
+                    <Button 
+                      variant="outline" 
+                      className="w-full text-red-600 border-red-200 hover:bg-red-50 dark:border-red-900 dark:hover:bg-red-950"
+                      onClick={async () => {
+                        if (window.confirm(`Tem certeza que deseja excluir a solicitação de ${selectedRequest.name}?`)) {
+                          await remove(selectedRequest.id);
+                          setIsDetailOpen(false);
+                          setSelectedRequest(null);
+                        }
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Excluir Solicitação
                     </Button>
                   </div>
                 </TabsContent>

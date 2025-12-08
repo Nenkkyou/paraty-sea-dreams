@@ -17,6 +17,7 @@ import {
   Waves,
   Loader2,
   RefreshCw,
+  Trash2,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -107,7 +108,7 @@ const getServiceStatusIcon = (status: string) => {
 const AdminDashboard = () => {
   // Carregar dados reais do Firestore
   const { stats: dashboardStats, loading: statsLoading, refresh: refreshStats } = useDashboard();
-  const { solicitations, loading: solicitationsLoading, stats: solicitationStats } = useSolicitations();
+  const { solicitations, loading: solicitationsLoading, stats: solicitationStats, remove } = useSolicitations();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -315,7 +316,7 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Requests */}
         <motion.div variants={itemVariants} className="lg:col-span-2">
-          <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50">
+          <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <div>
                 <CardTitle className="text-lg font-semibold text-foreground">Solicitações Recentes</CardTitle>
@@ -326,7 +327,7 @@ const AdminDashboard = () => {
                 <ArrowUpRight className="w-4 h-4" />
               </button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pb-4">
               <div className="space-y-2">
                 {recentSolicitations.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
@@ -355,11 +356,28 @@ const AdminDashboard = () => {
                         </div>
                         <p className="text-sm text-muted-foreground truncate">{solicitation.subject || solicitation.route || 'Contato geral'}</p>
                       </div>
-                      <div className="text-right flex flex-col items-end">
+                      <div className="text-right flex flex-col items-end gap-1">
                         <p className="text-xs text-muted-foreground">{formatTimeAgo(solicitation.createdAt)}</p>
-                        <button className="mt-1 p-2 -mr-2 text-muted-foreground group-hover:text-ocean-teal transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center">
-                          <Eye className="w-5 h-5" />
-                        </button>
+                        <div className="flex items-center gap-1">
+                          <button 
+                            className="p-2 text-muted-foreground group-hover:text-ocean-teal transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                            title="Ver detalhes"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button 
+                            className="p-2 text-muted-foreground group-hover:text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-950 rounded-lg"
+                            title="Excluir"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              if (window.confirm(`Excluir solicitação de ${solicitation.name}?`)) {
+                                await remove(solicitation.id);
+                              }
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </motion.div>
                   ))

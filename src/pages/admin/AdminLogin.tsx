@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Anchor, Lock, User, Eye, EyeOff, Waves, AlertCircle } from "lucide-react";
+import { Anchor, Lock, Eye, EyeOff, AlertCircle, Waves } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,11 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 // Senha mestra do ambiente
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_MASTER_PASSWORD || '';
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || '';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState(ADMIN_EMAIL);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,10 +26,9 @@ const AdminLogin = () => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
     // Verificar senha mestra
-    if (password === ADMIN_PASSWORD && email.trim() !== "") {
+    if (password === ADMIN_PASSWORD && ADMIN_PASSWORD !== '') {
       // Salvar sessão no localStorage
       localStorage.setItem('adminAuth', JSON.stringify({
-        email,
         authenticated: true,
         timestamp: Date.now()
       }));
@@ -39,7 +36,7 @@ const AdminLogin = () => {
       // Ir para o dashboard
       navigate("/admin/dashboard");
     } else {
-      setError("Email ou senha incorretos");
+      setError("Senha incorreta");
       setIsLoading(false);
     }
   };
@@ -147,24 +144,6 @@ const AdminLogin = () => {
                   </motion.div>
                 )}
 
-                {/* Email Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="admin@paratyboat.com.br"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 h-12 bg-gray-50 border-gray-200 focus:border-ocean-teal focus:ring-ocean-teal/20"
-                    />
-                  </div>
-                </div>
-
                 {/* Password Field */}
                 <div className="space-y-2">
                   <Label htmlFor="password" className="text-sm font-medium text-gray-700">
@@ -192,20 +171,6 @@ const AdminLogin = () => {
                       )}
                     </button>
                   </div>
-                </div>
-
-                {/* Remember Me & Forgot Password */}
-                <div className="flex items-center justify-between text-sm">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300 text-ocean-teal focus:ring-ocean-teal/20"
-                    />
-                    <span className="text-gray-600">Lembrar-me</span>
-                  </label>
-                  <a href="#" className="text-ocean-teal hover:text-ocean-navy transition-colors font-medium">
-                    Esqueci a senha
-                  </a>
                 </div>
 
                 {/* Submit Button */}
