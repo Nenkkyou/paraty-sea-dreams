@@ -39,17 +39,17 @@ dist-ssr
 build
 *.local
 
-# Environment variables
+# Environment variables - CRÍTICO: nunca commit credenciais!
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.production
+.env.staging
+.env.*.local
 
-# API keys and secrets
-*.key
-*.pem
-secrets.json
+# Firebase service account keys - NUNCA commit!
+*-service-account*.json
+firebase-adminsdk*.json
+serviceAccountKey.json
 
 # Editor directories and files
 .vscode/*
@@ -62,35 +62,5 @@ secrets.json
 *.sln
 *.sw?
 
-# OS generated files
-Thumbs.db
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Desktop.ini
-
-# Temporary files
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
-
-# Package manager lock files (opcional manter bun.lockb se usar Bun)
-# npm-shrinkwrap.json
-# package-lock.json
-# yarn.lock
-
-# Server logs
-api/logs/
-server.log
-
-# Cache directories
-.cache
-.parcel-cache
-.next
-.nuxt
-.vuepress/dist
+# Health check reports
+health-report*.json

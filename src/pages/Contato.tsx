@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Ship, Send, MessageCircle, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { sendContactEmail } from "@/services/emailService";
+import { createSolicitation } from "@/services/solicitationService";
 import { useState } from "react";
 
 const Contato = () => {
@@ -60,6 +61,26 @@ const Contato = () => {
     
     try {
       console.log("Form data:", data);
+      
+      // Salvar solicitação no Firestore para o painel admin
+      try {
+        await createSolicitation({
+          name: data.nome,
+          email: data.email,
+          phone: data.telefone,
+          subject: `Interesse em: ${routesOptions.find(r => r.key === data.roteiro)?.label || data.roteiro}`,
+          message: data.mensagem,
+          type: 'reservation',
+          status: 'pending',
+          route: routesOptions.find(r => r.key === data.roteiro)?.label || null,
+          starred: false,
+          source: 'website',
+        });
+        console.log("Solicitação salva no Firestore");
+      } catch (firestoreError) {
+        console.error("Erro ao salvar no Firestore:", firestoreError);
+        // Continua mesmo se falhar o Firestore, pois o email ainda pode ser enviado
+      }
       
       // Enviar email usando o serviço Resend via API backend
       const result = await sendContactEmail(data);

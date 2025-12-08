@@ -24,12 +24,12 @@ const Header = () => {
           </span>
         </Link>
         
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-4">
           <Link
             to="/"
-            className={`text-sm font-medium transition-colors ${
+            className={`text-sm font-medium transition-colors py-3 px-4 rounded-lg hover:bg-white/10 ${
               location.pathname === "/"
-                ? "text-accent"
+                ? "text-accent bg-white/5"
                 : "text-primary-foreground/80 hover:text-accent"
             }`}
           >
@@ -37,9 +37,9 @@ const Header = () => {
           </Link>
           <Link
             to="/roteiros"
-            className={`text-sm font-medium transition-colors ${
+            className={`text-sm font-medium transition-colors py-3 px-4 rounded-lg hover:bg-white/10 ${
               location.pathname === "/roteiros"
-                ? "text-accent"
+                ? "text-accent bg-white/5"
                 : "text-primary-foreground/80 hover:text-accent"
             }`}
           >

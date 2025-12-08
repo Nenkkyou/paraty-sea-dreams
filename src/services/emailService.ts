@@ -21,6 +21,9 @@ const EMAIL_ENDPOINT = isDevelopment
   ? `${API_BASE_URL}/api/send-email`
   : `${API_BASE_URL}/sendEmail`;
 
+// Email destinatário das solicitações de contato
+const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || "cdantasneto@gmail.com";
+
 export const sendContactEmail = async (formData: ContactFormData) => {
   try {
     const response = await fetch(EMAIL_ENDPOINT, {
@@ -28,7 +31,10 @@ export const sendContactEmail = async (formData: ContactFormData) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        ...formData,
+        to: CONTACT_EMAIL,
+      }),
     });
 
     const payload = await response.json().catch(() => ({ success: false }));
