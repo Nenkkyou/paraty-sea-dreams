@@ -49,11 +49,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 import { useSolicitations } from "@/hooks/useSolicitations";
 import { Solicitation } from "@/types";
 import { Timestamp } from "firebase/firestore";
-import { sendReplyEmail } from "@/services/emailService";
 import { toast } from "sonner";
 
 const getStatusBadge = (status: string) => {
@@ -135,51 +133,11 @@ const AdminSolicitacoes = () => {
   const [filterFavorites, setFilterFavorites] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
-  
-  // Estados para resposta de email
-  const [replySubject, setReplySubject] = useState("");
-  const [replyMessage, setReplyMessage] = useState("");
-  const [isSendingReply, setIsSendingReply] = useState(false);
 
-  // Atualizar assunto quando selecionar uma solicitação
+  // Abrir detalhes de uma solicitação
   const handleOpenDetail = (request: Solicitation) => {
     setSelectedRequest(request);
-    setReplySubject(`Re: ${request.subject}`);
-    setReplyMessage("");
     setIsDetailOpen(true);
-  };
-
-  // Enviar resposta por email
-  const handleSendReply = async () => {
-    if (!selectedRequest || !replyMessage.trim()) {
-      toast.error("Digite uma mensagem para enviar");
-      return;
-    }
-    
-    setIsSendingReply(true);
-    
-    try {
-      const result = await sendReplyEmail({
-        to: selectedRequest.email,
-        subject: replySubject,
-        message: replyMessage,
-      });
-      
-      if (result.success) {
-        toast.success(`Resposta enviada para ${selectedRequest.email}!`);
-        // Atualizar status para "respondido"
-        await updateStatus(selectedRequest.id, 'responded');
-        setReplyMessage("");
-        setIsDetailOpen(false);
-      } else {
-        toast.error(result.error || "Erro ao enviar email");
-      }
-    } catch (error) {
-      console.error("Erro ao enviar resposta:", error);
-      toast.error("Erro ao enviar resposta");
-    } finally {
-      setIsSendingReply(false);
-    }
   };
 
   const handleRefresh = async () => {
@@ -541,7 +499,6 @@ const AdminSolicitacoes = () => {
               <Tabs defaultValue="details" className="mt-4">
                 <TabsList className="w-full bg-muted dark:bg-slate-800 p-1">
                   <TabsTrigger value="details" className="flex-1 text-xs md:text-sm data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Detalhes</TabsTrigger>
-                  <TabsTrigger value="reply" className="flex-1 text-xs md:text-sm data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Responder</TabsTrigger>
                   <TabsTrigger value="history" className="flex-1 text-xs md:text-sm data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Histórico</TabsTrigger>
                 </TabsList>
 
@@ -613,46 +570,6 @@ const AdminSolicitacoes = () => {
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
                       Excluir Solicitação
-                    </Button>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="reply" className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Para: <span className="text-muted-foreground">{selectedRequest.email}</span></label>
-                    <Input 
-                      placeholder="Assunto da resposta" 
-                      value={replySubject}
-                      onChange={(e) => setReplySubject(e.target.value)}
-                      className="bg-background dark:bg-slate-800 border-border dark:border-slate-700" 
-                    />
-                  </div>
-                  <Textarea
-                    placeholder="Digite sua resposta..."
-                    value={replyMessage}
-                    onChange={(e) => setReplyMessage(e.target.value)}
-                    className="min-h-[200px] bg-background dark:bg-slate-800 border-border dark:border-slate-700"
-                  />
-                  <div className="flex gap-3">
-                    <Button 
-                      className="bg-gradient-to-r from-ocean-teal to-cyan-500 hover:from-ocean-navy hover:to-ocean-teal text-white shadow-lg"
-                      onClick={handleSendReply}
-                      disabled={isSendingReply || !replyMessage.trim()}
-                    >
-                      {isSendingReply ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Enviando...
-                        </>
-                      ) : (
-                        <>
-                          <Mail className="w-4 h-4 mr-2" />
-                          Enviar Resposta
-                        </>
-                      )}
-                    </Button>
-                    <Button variant="outline" className="border-border dark:border-slate-700 hover:bg-muted dark:hover:bg-slate-800">
-                      Salvar Rascunho
                     </Button>
                   </div>
                 </TabsContent>
