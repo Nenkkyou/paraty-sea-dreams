@@ -31,46 +31,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-
-// Menu items configuration
-const menuItems = [
-  {
-    title: "Dashboard",
-    icon: LayoutDashboard,
-    path: "/admin/dashboard",
-    badge: null,
-  },
-  {
-    title: "Solicitações",
-    icon: MessageSquare,
-    path: "/admin/solicitacoes",
-    badge: 5,
-  },
-  {
-    title: "Reservas",
-    icon: Calendar,
-    path: "/admin/reservas",
-    badge: 3,
-  },
-  {
-    title: "Clientes",
-    icon: Users,
-    path: "/admin/clientes",
-    badge: null,
-  },
-  {
-    title: "Monitor",
-    icon: Activity,
-    path: "/admin/monitor",
-    badge: null,
-  },
-  {
-    title: "Configurações",
-    icon: Settings,
-    path: "/admin/configuracoes",
-    badge: null,
-  },
-];
+import { useSolicitations } from "@/hooks/useSolicitations";
+import { useReservations } from "@/hooks/useReservations";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -78,6 +40,50 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  
+  // Buscar contagens reais do Firestore
+  const { stats: solicitationStats } = useSolicitations();
+  const { stats: reservationStats } = useReservations();
+
+  // Menu items com contagens dinâmicas
+  const menuItems = [
+    {
+      title: "Dashboard",
+      icon: LayoutDashboard,
+      path: "/admin/dashboard",
+      badge: null,
+    },
+    {
+      title: "Solicitações",
+      icon: MessageSquare,
+      path: "/admin/solicitacoes",
+      badge: solicitationStats?.pending || null,
+    },
+    {
+      title: "Reservas",
+      icon: Calendar,
+      path: "/admin/reservas",
+      badge: reservationStats?.pending || null,
+    },
+    {
+      title: "Clientes",
+      icon: Users,
+      path: "/admin/clientes",
+      badge: null,
+    },
+    {
+      title: "Monitor",
+      icon: Activity,
+      path: "/admin/monitor",
+      badge: null,
+    },
+    {
+      title: "Configurações",
+      icon: Settings,
+      path: "/admin/configuracoes",
+      badge: null,
+    },
+  ];
 
   const handleLogout = () => {
     // Limpar sessão de autenticação
