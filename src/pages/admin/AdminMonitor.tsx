@@ -24,6 +24,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // Service status types
 type ServiceStatus = "online" | "warning" | "offline" | "checking";
@@ -36,6 +43,8 @@ interface Service {
   uptime: number;
   icon: React.ElementType;
   lastCheck: string;
+  alertMessage?: string;
+  alertDetails?: string;
 }
 
 // Mock services data
@@ -70,7 +79,7 @@ const initialServices: Service[] = [
   {
     name: "Resend Email",
     description: "Serviço de envio de emails",
-    status: "warning",
+    status: "online",
     latency: 156,
     uptime: 98.5,
     icon: Mail,
@@ -198,6 +207,7 @@ const AdminMonitor = () => {
   const [isChecking, setIsChecking] = useState(false);
   const [lastFullCheck, setLastFullCheck] = useState(new Date());
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   // Auto refresh every 30 seconds
   useEffect(() => {
@@ -260,7 +270,7 @@ const AdminMonitor = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md dark:shadow-none">
               <Activity className="w-5 h-5 text-white" />
             </div>
             Monitor do Sistema
@@ -312,7 +322,7 @@ const AdminMonitor = () => {
           <CardContent className="p-4 md:p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex items-center gap-3 md:gap-5">
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-md dark:shadow-none">
                   {overallStatus === "healthy" ? (
                     <CheckCircle2 className="w-6 h-6 md:w-8 md:h-8 text-white" />
                   ) : overallStatus === "warning" ? (
@@ -389,6 +399,7 @@ const AdminMonitor = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {services.map((service, index) => {
           const StatusIcon = getStatusIcon(service.status);
+          const hasAlert = service.status === "warning" || service.status === "offline";
           return (
             <motion.div
               key={service.name}
@@ -396,7 +407,10 @@ const AdminMonitor = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.05 }}
             >
-              <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 hover:shadow-lg transition-all group">
+              <Card 
+                className={`border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 hover:shadow-lg transition-all group ${hasAlert ? "cursor-pointer ring-1 ring-amber-500/30 dark:ring-amber-400/30 hover:ring-amber-500/50 dark:hover:ring-amber-400/50" : ""}`}
+                onClick={() => hasAlert && setSelectedService(service)}
+              >
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-4">
                     <div className={`w-12 h-12 rounded-xl ${getStatusBgColor(service.status)} flex items-center justify-center transition-transform group-hover:scale-110`}>
@@ -411,6 +425,16 @@ const AdminMonitor = () => {
                   </div>
                   <h3 className="font-semibold text-foreground">{service.name}</h3>
                   <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
+                  {/* Alert message preview */}
+                  {hasAlert && service.alertMessage && (
+                    <div className="mt-3 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                      <p className="text-xs text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                        <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span className="truncate">{service.alertMessage}</span>
+                      </p>
+                      <p className="text-[10px] text-amber-600/70 dark:text-amber-500/70 mt-1">Clique para ver detalhes</p>
+                    </div>
+                  )}
                   <div className="mt-4 pt-4 border-t border-border dark:border-slate-700">
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2">
@@ -430,6 +454,89 @@ const AdminMonitor = () => {
           );
         })}
       </div>
+
+      {/* Service Alert Details Dialog */}
+      <Dialog open={!!selectedService} onOpenChange={() => setSelectedService(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3">
+              {selectedService && (
+                <>
+                  <div className={`w-10 h-10 rounded-xl ${getStatusBgColor(selectedService.status)} flex items-center justify-center`}>
+                    <selectedService.icon className={`w-5 h-5 ${getStatusColor(selectedService.status)}`} />
+                  </div>
+                  <div>
+                    <span className="text-foreground">{selectedService.name}</span>
+                    <Badge className={`ml-2 ${selectedService.status === "warning" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400" : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"} border-0`}>
+                      {selectedService.status === "warning" ? "Alerta" : "Offline"}
+                    </Badge>
+                  </div>
+                </>
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedService?.description}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedService && (
+            <div className="space-y-4 mt-2">
+              {/* Alert Message */}
+              <div className={`p-4 rounded-xl ${selectedService.status === "warning" ? "bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800" : "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"}`}>
+                <h4 className={`font-semibold flex items-center gap-2 ${selectedService.status === "warning" ? "text-amber-700 dark:text-amber-400" : "text-red-700 dark:text-red-400"}`}>
+                  <AlertCircle className="w-4 h-4" />
+                  {selectedService.alertMessage || "Problema detectado"}
+                </h4>
+                {selectedService.alertDetails && (
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                    {selectedService.alertDetails}
+                  </p>
+                )}
+              </div>
+
+              {/* Service Stats */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="p-3 rounded-xl bg-muted/50 dark:bg-slate-800/50 text-center">
+                  <Zap className="w-4 h-4 text-amber-500 mx-auto mb-1" />
+                  <p className="text-lg font-bold text-foreground">{selectedService.latency}ms</p>
+                  <p className="text-xs text-muted-foreground">Latência</p>
+                </div>
+                <div className="p-3 rounded-xl bg-muted/50 dark:bg-slate-800/50 text-center">
+                  <TrendingUp className="w-4 h-4 text-emerald-500 mx-auto mb-1" />
+                  <p className="text-lg font-bold text-foreground">{selectedService.uptime}%</p>
+                  <p className="text-xs text-muted-foreground">Uptime</p>
+                </div>
+                <div className="p-3 rounded-xl bg-muted/50 dark:bg-slate-800/50 text-center">
+                  <Clock className="w-4 h-4 text-blue-500 mx-auto mb-1" />
+                  <p className="text-sm font-bold text-foreground">{selectedService.lastCheck}</p>
+                  <p className="text-xs text-muted-foreground">Verificado</p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => {
+                    setSelectedService(null);
+                    runHealthCheck();
+                  }}
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Verificar Novamente
+                </Button>
+                <Button
+                  variant="default"
+                  className="flex-1 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
+                  onClick={() => setSelectedService(null)}
+                >
+                  Entendi
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* System Metrics & Events */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

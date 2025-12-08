@@ -23,11 +23,11 @@ const Roteiros = () => {
     <main className="flex-1 pt-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-8">
-          <Link to="/" className="hover:text-accent transition-colors">
+          <Link to="/" className="hover:text-accent transition-colors py-2 px-3 rounded-lg hover:bg-accent/10 min-h-[44px] flex items-center">
             {t('routes.breadcrumbHome')}
           </Link>
           <ChevronRight className="w-4 h-4" />
-          <span className="text-foreground">{t('routes.breadcrumbCurrent')}</span>
+          <span className="text-foreground py-2">{t('routes.breadcrumbCurrent')}</span>
         </div>
 
         <motion.div

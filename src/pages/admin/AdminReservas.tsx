@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar,
@@ -22,6 +22,7 @@ import {
   Anchor,
   Sun,
   Sunset,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,106 +49,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-// Mock data for confirmed reservations
-const mockReservations = [
-  {
-    id: 1,
-    client: "João Silva",
-    phone: "(24) 99999-1234",
-    email: "joao.silva@email.com",
-    route: "Ilha Grande - Full Day",
-    date: "2025-12-14",
-    time: "09:00",
-    guests: 8,
-    status: "confirmed",
-    totalValue: 2400,
-    notes: "Cliente solicitou almoço especial a bordo",
-    boat: "Lancha Paraty I",
-    paymentStatus: "paid",
-    createdAt: "2025-12-07T14:30:00",
-  },
-  {
-    id: 2,
-    client: "Pedro Oliveira",
-    phone: "(24) 97777-9012",
-    email: "pedro@empresa.com.br",
-    route: "Praias de Paraty",
-    date: "2025-12-20",
-    time: "10:00",
-    guests: 4,
-    status: "confirmed",
-    totalValue: 1200,
-    notes: "",
-    boat: "Lancha Paraty II",
-    paymentStatus: "partial",
-    createdAt: "2025-12-06T16:45:00",
-  },
-  {
-    id: 3,
-    client: "Fernanda Lima",
-    phone: "(24) 94444-1234",
-    email: "fernanda@email.com",
-    route: "Pôr do Sol",
-    date: "2025-12-15",
-    time: "16:30",
-    guests: 6,
-    status: "confirmed",
-    totalValue: 1800,
-    notes: "Comemoração de aniversário",
-    boat: "Lancha Paraty I",
-    paymentStatus: "paid",
-    createdAt: "2025-12-04T18:30:00",
-  },
-  {
-    id: 4,
-    client: "Roberto Alves",
-    phone: "(21) 98765-4321",
-    email: "roberto@gmail.com",
-    route: "Saco do Mamanguá",
-    date: "2025-12-18",
-    time: "08:00",
-    guests: 10,
-    status: "in_progress",
-    totalValue: 3500,
-    notes: "Grupo de mergulho",
-    boat: "Lancha Paraty I",
-    paymentStatus: "paid",
-    createdAt: "2025-12-05T11:20:00",
-  },
-  {
-    id: 5,
-    client: "Mariana Costa",
-    phone: "(24) 91234-5678",
-    email: "mariana@hotmail.com",
-    route: "Ilha Grande - Full Day",
-    date: "2025-12-12",
-    time: "09:00",
-    guests: 5,
-    status: "completed",
-    totalValue: 1500,
-    notes: "",
-    boat: "Lancha Paraty II",
-    paymentStatus: "paid",
-    createdAt: "2025-12-01T09:00:00",
-  },
-  {
-    id: 6,
-    client: "Lucas Ferreira",
-    phone: "(24) 99876-5432",
-    email: "lucas.f@email.com",
-    route: "Praias de Paraty",
-    date: "2025-12-21",
-    time: "10:00",
-    guests: 3,
-    status: "confirmed",
-    totalValue: 900,
-    notes: "Primeira vez em Paraty",
-    boat: "Lancha Paraty II",
-    paymentStatus: "pending",
-    createdAt: "2025-12-07T08:15:00",
-  },
-];
+import { useReservations } from "@/hooks/useReservations";
+import { Reservation } from "@/types";
+import { Timestamp } from "firebase/firestore";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -220,9 +124,30 @@ const getRouteIcon = (route: string) => {
   return <Sun className="w-4 h-4" />;
 };
 
+// Helper para formatar datas do Firestore
+const formatDateFromTimestamp = (date: Timestamp | string | undefined) => {
+  if (!date) return '-';
+  const dateObj = date instanceof Timestamp ? date.toDate() : new Date(date);
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(dateObj);
+};
+
 const AdminReservas = () => {
-  const [reservations] = useState(mockReservations);
-  const [selectedReservation, setSelectedReservation] = useState<typeof mockReservations[0] | null>(null);
+  // Usar dados reais do Firestore
+  const { 
+    reservations, 
+    stats: firestoreStats, 
+    loading, 
+    refresh,
+    confirm,
+    cancel,
+    complete,
+  } = useReservations();
+  
+  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterPayment, setFilterPayment] = useState("all");
@@ -231,33 +156,41 @@ const AdminReservas = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await refresh();
     setIsRefreshing(false);
   };
 
-  const filteredReservations = reservations.filter(res => {
-    const matchesStatus = filterStatus === "all" || res.status === filterStatus;
-    const matchesPayment = filterPayment === "all" || res.paymentStatus === filterPayment;
-    const matchesSearch = 
-      res.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      res.route.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      res.boat.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesStatus && matchesPayment && matchesSearch;
-  });
+  const filteredReservations = useMemo(() => {
+    return reservations.filter(res => {
+      const matchesStatus = filterStatus === "all" || res.status === filterStatus;
+      const matchesPayment = filterPayment === "all" || res.paymentStatus === filterPayment;
+      const matchesSearch = 
+        res.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        res.routeName.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesStatus && matchesPayment && matchesSearch;
+    });
+  }, [reservations, filterStatus, filterPayment, searchQuery]);
 
-  const stats = {
+  const stats = firestoreStats || {
     total: reservations.length,
     confirmed: reservations.filter(r => r.status === "confirmed").length,
-    inProgress: reservations.filter(r => r.status === "in_progress").length,
+    pending: reservations.filter(r => r.status === "pending").length,
     completed: reservations.filter(r => r.status === "completed").length,
-    totalRevenue: reservations.filter(r => r.paymentStatus === "paid").reduce((acc, r) => acc + r.totalValue, 0),
+    cancelled: reservations.filter(r => r.status === "cancelled").length,
+    todayCount: 0,
+    weekCount: 0,
+    monthCount: reservations.length,
+    totalRevenue: reservations.filter(r => r.paymentStatus === "paid").reduce((acc, r) => acc + r.totalAmount, 0),
+    monthRevenue: 0,
   };
 
   // Group reservations by date for calendar view
-  const upcomingReservations = reservations
-    .filter(r => r.status === "confirmed" || r.status === "in_progress")
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 5);
+  const upcomingReservations = useMemo(() => {
+    return reservations
+      .filter(r => r.status === "confirmed" || r.status === "pending")
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .slice(0, 5);
+  }, [reservations]);
 
   return (
     <motion.div
@@ -269,7 +202,7 @@ const AdminReservas = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-md dark:shadow-none">
               <Calendar className="w-5 h-5 text-white" />
             </div>
             Reservas
@@ -305,7 +238,7 @@ const AdminReservas = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-blue-50 dark:bg-blue-950/30 hover:shadow-md transition-all">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md dark:shadow-none shrink-0">
                 <CalendarDays className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
@@ -322,7 +255,7 @@ const AdminReservas = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-emerald-50 dark:bg-emerald-950/30 hover:shadow-md transition-all">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md dark:shadow-none shrink-0">
                 <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
@@ -339,7 +272,7 @@ const AdminReservas = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-cyan-50 dark:bg-cyan-950/30 hover:shadow-md transition-all">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-lg shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-md dark:shadow-none shrink-0">
                 <Ship className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
@@ -356,7 +289,7 @@ const AdminReservas = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-slate-50 dark:bg-slate-800/30 hover:shadow-md transition-all">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-500 to-slate-600 flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-500 to-slate-600 flex items-center justify-center shadow-md dark:shadow-none">
                 <Anchor className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -373,7 +306,7 @@ const AdminReservas = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-violet-50 dark:bg-violet-950/30 hover:shadow-md transition-all col-span-2 md:col-span-1">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-md dark:shadow-none">
                 <DollarSign className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -453,7 +386,7 @@ const AdminReservas = () => {
                     >
                       <div className="flex items-start gap-4">
                         {/* Date Badge */}
-                        <div className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-ocean-navy to-ocean-teal text-white shadow-lg">
+                        <div className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-ocean-navy to-ocean-teal text-white shadow-md dark:shadow-none">
                           <span className="text-lg font-bold leading-none">{new Date(reservation.date).getDate()}</span>
                           <span className="text-xs uppercase">{new Date(reservation.date).toLocaleString('pt-BR', { month: 'short' })}</span>
                         </div>
@@ -461,13 +394,13 @@ const AdminReservas = () => {
                         {/* Content */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-semibold text-foreground">{reservation.client}</span>
+                            <span className="font-semibold text-foreground">{reservation.clientName}</span>
                             {getStatusBadge(reservation.status)}
                             {getPaymentBadge(reservation.paymentStatus)}
                           </div>
                           <div className="flex items-center gap-2 mt-1">
-                            {getRouteIcon(reservation.route)}
-                            <span className="text-sm font-medium text-foreground/80">{reservation.route}</span>
+                            {getRouteIcon(reservation.routeName)}
+                            <span className="text-sm font-medium text-foreground/80">{reservation.routeName}</span>
                           </div>
                           <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
                             <span className="flex items-center gap-1">
@@ -478,13 +411,9 @@ const AdminReservas = () => {
                               <Users className="w-3 h-3" />
                               {reservation.guests} pessoas
                             </span>
-                            <span className="flex items-center gap-1">
-                              <Ship className="w-3 h-3" />
-                              {reservation.boat}
-                            </span>
                             <span className="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400">
                               <DollarSign className="w-3 h-3" />
-                              {formatCurrency(reservation.totalValue)}
+                              {formatCurrency(reservation.totalAmount)}
                             </span>
                           </div>
                         </div>
@@ -579,8 +508,8 @@ const AdminReservas = () => {
                       <span className="uppercase text-[8px]">{new Date(res.date).toLocaleString('pt-BR', { month: 'short' })}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-foreground text-sm truncate">{res.client}</p>
-                      <p className="text-xs text-muted-foreground truncate">{res.route} • {res.time}</p>
+                      <p className="font-medium text-foreground text-sm truncate">{res.clientName}</p>
+                      <p className="text-xs text-muted-foreground truncate">{res.routeName} • {res.time}</p>
                     </div>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Users className="w-3 h-3" />
@@ -634,18 +563,18 @@ const AdminReservas = () => {
 
       {/* Reservation Detail Dialog */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <DialogContent className="max-w-2xl bg-card dark:bg-slate-900 border-border dark:border-slate-700">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-card dark:bg-slate-900 border-border dark:border-slate-700">
           {selectedReservation && (
             <>
               <DialogHeader>
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex flex-col items-center justify-center text-white shadow-lg">
-                    <span className="text-xl font-bold leading-none">{new Date(selectedReservation.date).getDate()}</span>
-                    <span className="text-xs uppercase">{new Date(selectedReservation.date).toLocaleString('pt-BR', { month: 'short' })}</span>
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex flex-col items-center justify-center text-white shadow-md dark:shadow-none shrink-0">
+                    <span className="text-lg md:text-xl font-bold leading-none">{new Date(selectedReservation.date).getDate()}</span>
+                    <span className="text-[10px] md:text-xs uppercase">{new Date(selectedReservation.date).toLocaleString('pt-BR', { month: 'short' })}</span>
                   </div>
-                  <div>
-                    <DialogTitle className="text-xl text-foreground">{selectedReservation.client}</DialogTitle>
-                    <DialogDescription className="flex items-center gap-2 mt-1">
+                  <div className="min-w-0">
+                    <DialogTitle className="text-lg md:text-xl text-foreground truncate">{selectedReservation.clientName}</DialogTitle>
+                    <DialogDescription className="flex flex-wrap items-center gap-2 mt-1">
                       {getStatusBadge(selectedReservation.status)}
                       {getPaymentBadge(selectedReservation.paymentStatus)}
                     </DialogDescription>
@@ -655,18 +584,18 @@ const AdminReservas = () => {
 
               <div className="space-y-6 mt-4">
                 {/* Reservation Info */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center shrink-0">
                       <MapPin className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Roteiro</p>
-                      <p className="text-sm font-medium text-foreground">{selectedReservation.route}</p>
+                      <p className="text-sm font-medium text-foreground">{selectedReservation.routeName}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0">
                       <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
@@ -675,7 +604,7 @@ const AdminReservas = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center shrink-0">
                       <Users className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                     </div>
                     <div>
@@ -684,30 +613,21 @@ const AdminReservas = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
                       <DollarSign className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Valor Total</p>
-                      <p className="text-sm font-medium text-foreground">{formatCurrency(selectedReservation.totalValue)}</p>
+                      <p className="text-sm font-medium text-foreground">{formatCurrency(selectedReservation.totalAmount)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-                      <Ship className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Embarcação</p>
-                      <p className="text-sm font-medium text-foreground">{selectedReservation.boat}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center shrink-0">
                       <Phone className="w-4 h-4 text-rose-600 dark:text-rose-400" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Telefone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedReservation.phone}</p>
+                      <p className="text-sm font-medium text-foreground">{selectedReservation.clientPhone}</p>
                     </div>
                   </div>
                 </div>

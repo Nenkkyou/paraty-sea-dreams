@@ -3,13 +3,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Roteiros from "./pages/Roteiros";
 import Contato from "./pages/Contato";
 import NotFound from "./pages/NotFound";
 import { FirebaseExample } from "./components/FirebaseExample";
+import { AdminGuard } from "./components/AdminGuard";
 
 // Admin Pages
 import {
@@ -24,27 +24,25 @@ import {
   AdminConfiguracoes,
 } from "./pages/admin";
 
-// Responsive Monitor (development only)
-import { initResponsiveMonitor } from "@/utils/responsiveMonitor";
-
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Inicializa o Responsive Monitor em desenvolvimento
+  // Responsive Monitor desabilitado - remover linhas fantasmas
+  // Para reativar, descomente o useEffect abaixo
+  /*
   useEffect(() => {
     if (import.meta.env.DEV) {
-      // Delay para garantir que o DOM está pronto
       const timer = setTimeout(() => {
         initResponsiveMonitor({
-          autoRun: false, // Não executar automaticamente - use window.runResponsiveCheck()
-          enableOverlay: true,
+          autoRun: false,
+          enableOverlay: false,
           logToConsole: true,
         });
       }, 2000);
-      
       return () => clearTimeout(timer);
     }
   }, []);
+  */
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -63,15 +61,15 @@ const App = () => {
 
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="solicitacoes" element={<AdminSolicitacoes />} />
               <Route path="reservas" element={<AdminReservas />} />
               <Route path="embarcacoes" element={<AdminEmbarcacoes />} />
               <Route path="clientes" element={<AdminClientes />} />
-            <Route path="monitor" element={<AdminMonitor />} />
-            <Route path="configuracoes" element={<AdminConfiguracoes />} />
-          </Route>
+              <Route path="monitor" element={<AdminMonitor />} />
+              <Route path="configuracoes" element={<AdminConfiguracoes />} />
+            </Route>
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />

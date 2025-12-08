@@ -105,7 +105,7 @@ const AdminConfiguracoes = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center shadow-md dark:shadow-none">
               <Settings className="w-5 h-5 text-white" />
             </div>
             Configurações
@@ -645,7 +645,7 @@ const AdminConfiguracoes = () => {
                 <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 hover:shadow-md transition-all group">
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between mb-4">
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${integration.color} flex items-center justify-center shadow-lg transition-transform group-hover:scale-110`}>
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${integration.color} flex items-center justify-center shadow-md dark:shadow-none transition-transform group-hover:scale-110`}>
                         <integration.icon className="w-6 h-6 text-white" />
                       </div>
                       <Badge className={`

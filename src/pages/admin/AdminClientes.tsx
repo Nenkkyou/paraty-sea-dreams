@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Users,
@@ -21,6 +21,7 @@ import {
   Crown,
   Award,
   UserCheck,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,117 +48,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-// Mock data for clients with confirmed trips
-const mockClients = [
-  {
-    id: 1,
-    name: "João Silva",
-    email: "joao.silva@email.com",
-    phone: "(24) 99999-1234",
-    totalTrips: 5,
-    totalSpent: 8500,
-    lastTrip: "2025-12-07",
-    firstTrip: "2024-06-15",
-    favoriteRoute: "Ilha Grande",
-    status: "vip",
-    rating: 5,
-    trips: [
-      { date: "2025-12-07", route: "Ilha Grande", guests: 8, value: 2400 },
-      { date: "2025-11-20", route: "Pôr do Sol", guests: 4, value: 1200 },
-      { date: "2025-10-05", route: "Praias de Paraty", guests: 6, value: 1800 },
-      { date: "2025-08-12", route: "Ilha Grande", guests: 4, value: 1600 },
-      { date: "2024-06-15", route: "Saco do Mamanguá", guests: 5, value: 1500 },
-    ],
-  },
-  {
-    id: 2,
-    name: "Maria Santos",
-    email: "maria.santos@email.com",
-    phone: "(24) 98888-5678",
-    totalTrips: 3,
-    totalSpent: 4200,
-    lastTrip: "2025-11-15",
-    firstTrip: "2025-03-22",
-    favoriteRoute: "Pôr do Sol",
-    status: "regular",
-    rating: 5,
-    trips: [
-      { date: "2025-11-15", route: "Pôr do Sol", guests: 6, value: 1800 },
-      { date: "2025-07-20", route: "Pôr do Sol", guests: 4, value: 1200 },
-      { date: "2025-03-22", route: "Praias de Paraty", guests: 4, value: 1200 },
-    ],
-  },
-  {
-    id: 3,
-    name: "Pedro Oliveira",
-    email: "pedro@empresa.com.br",
-    phone: "(24) 97777-9012",
-    totalTrips: 2,
-    totalSpent: 2700,
-    lastTrip: "2025-12-06",
-    firstTrip: "2025-09-10",
-    favoriteRoute: "Praias de Paraty",
-    status: "regular",
-    rating: 4,
-    trips: [
-      { date: "2025-12-06", route: "Praias de Paraty", guests: 4, value: 1200 },
-      { date: "2025-09-10", route: "Saco do Mamanguá", guests: 5, value: 1500 },
-    ],
-  },
-  {
-    id: 4,
-    name: "Fernanda Lima",
-    email: "fernanda@email.com",
-    phone: "(24) 94444-1234",
-    totalTrips: 4,
-    totalSpent: 6800,
-    lastTrip: "2025-12-04",
-    firstTrip: "2024-12-20",
-    favoriteRoute: "Ilha Grande",
-    status: "vip",
-    rating: 5,
-    trips: [
-      { date: "2025-12-04", route: "Pôr do Sol", guests: 6, value: 1800 },
-      { date: "2025-08-15", route: "Ilha Grande", guests: 8, value: 2400 },
-      { date: "2025-04-10", route: "Ilha Grande", guests: 6, value: 1800 },
-      { date: "2024-12-20", route: "Praias de Paraty", guests: 3, value: 800 },
-    ],
-  },
-  {
-    id: 5,
-    name: "Roberto Alves",
-    email: "roberto@gmail.com",
-    phone: "(21) 98765-4321",
-    totalTrips: 1,
-    totalSpent: 3500,
-    lastTrip: "2025-12-05",
-    firstTrip: "2025-12-05",
-    favoriteRoute: "Saco do Mamanguá",
-    status: "new",
-    rating: 5,
-    trips: [
-      { date: "2025-12-05", route: "Saco do Mamanguá", guests: 10, value: 3500 },
-    ],
-  },
-  {
-    id: 6,
-    name: "Mariana Costa",
-    email: "mariana@hotmail.com",
-    phone: "(24) 91234-5678",
-    totalTrips: 2,
-    totalSpent: 2700,
-    lastTrip: "2025-12-01",
-    firstTrip: "2025-06-18",
-    favoriteRoute: "Ilha Grande",
-    status: "regular",
-    rating: 4,
-    trips: [
-      { date: "2025-12-01", route: "Ilha Grande", guests: 5, value: 1500 },
-      { date: "2025-06-18", route: "Praias de Paraty", guests: 4, value: 1200 },
-    ],
-  },
-];
+import { useClients } from "@/hooks/useClients";
+import { Client } from "@/types";
+import { Timestamp } from "firebase/firestore";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -175,25 +68,32 @@ const getStatusBadge = (status: string) => {
           Regular
         </Badge>
       );
-    case "new":
+    case "corporate":
       return (
-        <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 border-0">
-          <Star className="w-3 h-3 mr-1" />
-          Novo
+        <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400 border-0">
+          <Award className="w-3 h-3 mr-1" />
+          Corporativo
         </Badge>
       );
     default:
-      return null;
+      return (
+        <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 border-0">
+          <Star className="w-3 h-3 mr-1" />
+          Regular
+        </Badge>
+      );
   }
 };
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
+// Helper para formatar datas do Firestore
+const formatDate = (date: Timestamp | string | undefined) => {
+  if (!date) return '-';
+  const dateObj = date instanceof Timestamp ? date.toDate() : new Date(date);
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
     month: "short",
     year: "numeric",
-  }).format(date);
+  }).format(dateObj);
 };
 
 const formatCurrency = (value: number) => {
@@ -204,8 +104,17 @@ const formatCurrency = (value: number) => {
 };
 
 const AdminClientes = () => {
-  const [clients] = useState(mockClients);
-  const [selectedClient, setSelectedClient] = useState<typeof mockClients[0] | null>(null);
+  // Usar dados reais do Firestore
+  const { 
+    clients, 
+    topClients,
+    stats: firestoreStats, 
+    loading, 
+    refresh,
+    promoteToVIP,
+  } = useClients();
+  
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -213,30 +122,31 @@ const AdminClientes = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await refresh();
     setIsRefreshing(false);
   };
 
-  const filteredClients = clients.filter(client => {
-    const matchesStatus = filterStatus === "all" || client.status === filterStatus;
-    const matchesSearch = 
-      client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.phone.includes(searchQuery);
-    return matchesStatus && matchesSearch;
-  });
+  const filteredClients = useMemo(() => {
+    return clients.filter(client => {
+      const matchesStatus = filterStatus === "all" || client.type === filterStatus;
+      const matchesSearch = 
+        client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        client.phone.includes(searchQuery);
+      return matchesStatus && matchesSearch;
+    });
+  }, [clients, filterStatus, searchQuery]);
 
-  const stats = {
+  const stats = firestoreStats || {
     total: clients.length,
-    vip: clients.filter(c => c.status === "vip").length,
-    regular: clients.filter(c => c.status === "regular").length,
-    newClients: clients.filter(c => c.status === "new").length,
-    totalRevenue: clients.reduce((acc, c) => acc + c.totalSpent, 0),
-    totalTrips: clients.reduce((acc, c) => acc + c.totalTrips, 0),
+    vip: clients.filter(c => c.type === "vip").length,
+    regular: clients.filter(c => c.type === "regular").length,
+    corporate: clients.filter(c => c.type === "corporate").length,
+    newThisMonth: 0,
+    totalTrips: clients.reduce((acc, c) => acc + (c.totalTrips || 0), 0),
+    totalRevenue: clients.reduce((acc, c) => acc + (c.totalSpent || 0), 0),
+    averageSpent: 0,
   };
-
-  // Top clients by spending
-  const topClients = [...clients].sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 5);
 
   return (
     <motion.div
@@ -248,7 +158,7 @@ const AdminClientes = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md dark:shadow-none">
               <Users className="w-5 h-5 text-white" />
             </div>
             Clientes
@@ -284,7 +194,7 @@ const AdminClientes = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-violet-50 dark:bg-violet-950/30 hover:shadow-md transition-all">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-lg shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-md dark:shadow-none shrink-0">
                 <Users className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
@@ -301,7 +211,7 @@ const AdminClientes = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-amber-50 dark:bg-amber-950/30 hover:shadow-md transition-all">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-md dark:shadow-none shrink-0">
                 <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
@@ -318,7 +228,7 @@ const AdminClientes = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-cyan-50 dark:bg-cyan-950/30 hover:shadow-md transition-all">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-lg shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-md dark:shadow-none shrink-0">
                 <Ship className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
@@ -335,7 +245,7 @@ const AdminClientes = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-emerald-50 dark:bg-emerald-950/30 hover:shadow-md transition-all">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md dark:shadow-none shrink-0">
                 <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
@@ -403,7 +313,7 @@ const AdminClientes = () => {
                           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg shadow-md">
                             {client.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                           </div>
-                          {client.status === "vip" && (
+                          {client.type === "vip" && (
                             <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-400 flex items-center justify-center shadow-sm">
                               <Crown className="w-3 h-3 text-white" />
                             </div>
@@ -414,7 +324,7 @@ const AdminClientes = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-semibold text-foreground">{client.name}</span>
-                            {getStatusBadge(client.status)}
+                            {getStatusBadge(client.type)}
                           </div>
                           <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground flex-wrap">
                             <span className="flex items-center gap-1">
@@ -435,10 +345,12 @@ const AdminClientes = () => {
                               <DollarSign className="w-3 h-3" />
                               {formatCurrency(client.totalSpent)}
                             </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3" />
-                              Favorito: {client.favoriteRoute}
-                            </span>
+                            {client.favoriteRoute && (
+                              <span className="flex items-center gap-1">
+                                <MapPin className="w-3 h-3" />
+                                Favorito: {client.favoriteRoute}
+                              </span>
+                            )}
                           </div>
                         </div>
 
@@ -446,7 +358,7 @@ const AdminClientes = () => {
                         <div className="flex items-center gap-3">
                           <div className="text-right hidden sm:block">
                             <p className="text-xs text-muted-foreground">Último passeio</p>
-                            <p className="text-sm font-medium text-foreground">{formatDate(client.lastTrip)}</p>
+                            <p className="text-sm font-medium text-foreground">{formatDate(client.lastTripDate)}</p>
                           </div>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
@@ -541,7 +453,7 @@ const AdminClientes = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-foreground text-sm truncate">{client.name}</p>
-                      <p className="text-xs text-muted-foreground">{client.totalTrips} passeios</p>
+                      <p className="text-xs text-muted-foreground truncate">{client.totalTrips} passeios</p>
                     </div>
                     <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                       {formatCurrency(client.totalSpent)}
@@ -606,13 +518,13 @@ const AdminClientes = () => {
                       <Star className="w-4 h-4 text-emerald-500" />
                       Novo
                     </span>
-                    <span className="text-muted-foreground">{stats.newClients} clientes</span>
+                    <span className="text-muted-foreground">{stats.newThisMonth} clientes</span>
                   </div>
                   <div className="h-2 bg-muted dark:bg-slate-800 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full"
                       initial={{ width: 0 }}
-                      animate={{ width: `${(stats.newClients / stats.total) * 100}%` }}
+                      animate={{ width: `${(stats.newThisMonth / stats.total) * 100}%` }}
                       transition={{ duration: 0.8, delay: 0.2 }}
                     />
                   </div>
@@ -625,30 +537,25 @@ const AdminClientes = () => {
 
       {/* Client Detail Dialog */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <DialogContent className="max-w-2xl bg-card dark:bg-slate-900 border-border dark:border-slate-700">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-card dark:bg-slate-900 border-border dark:border-slate-700">
           {selectedClient && (
             <>
               <DialogHeader>
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="relative shrink-0">
+                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-md dark:shadow-none">
                       {selectedClient.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                     </div>
-                    {selectedClient.status === "vip" && (
-                      <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center shadow-md">
-                        <Crown className="w-4 h-4 text-white" />
+                    {selectedClient.type === "vip" && (
+                      <div className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 rounded-full bg-amber-400 flex items-center justify-center shadow-md">
+                        <Crown className="w-3 h-3 md:w-4 md:h-4 text-white" />
                       </div>
                     )}
                   </div>
-                  <div>
-                    <DialogTitle className="text-xl text-foreground">{selectedClient.name}</DialogTitle>
-                    <DialogDescription className="flex items-center gap-2 mt-1">
-                      {getStatusBadge(selectedClient.status)}
-                      <span className="flex items-center gap-1">
-                        {[...Array(selectedClient.rating)].map((_, i) => (
-                          <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                        ))}
-                      </span>
+                  <div className="min-w-0">
+                    <DialogTitle className="text-lg md:text-xl text-foreground truncate">{selectedClient.name}</DialogTitle>
+                    <DialogDescription className="flex flex-wrap items-center gap-2 mt-1">
+                      {getStatusBadge(selectedClient.type)}
                     </DialogDescription>
                   </div>
                 </div>
@@ -656,21 +563,21 @@ const AdminClientes = () => {
 
               <div className="space-y-6 mt-4">
                 {/* Contact & Stats */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0">
                       <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </div>
                     <span className="text-sm text-foreground truncate">{selectedClient.email}</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
                       <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <span className="text-sm text-foreground">{selectedClient.phone}</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center shrink-0">
                       <Ship className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                     </div>
                     <div>
@@ -679,7 +586,7 @@ const AdminClientes = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center shrink-0">
                       <DollarSign className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                     </div>
                     <div>
@@ -689,48 +596,34 @@ const AdminClientes = () => {
                   </div>
                 </div>
 
-                {/* Trip History */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-foreground flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-ocean-teal" />
-                    Histórico de Passeios
-                  </h4>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {selectedClient.trips.map((trip, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700"
-                      >
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ocean-navy to-ocean-teal flex flex-col items-center justify-center text-white text-xs shadow-md">
-                          <span className="font-bold leading-none">{new Date(trip.date).getDate()}</span>
-                          <span className="uppercase text-[8px]">{new Date(trip.date).toLocaleString('pt-BR', { month: 'short' })}</span>
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium text-foreground text-sm">{trip.route}</p>
-                          <p className="text-xs text-muted-foreground">{trip.guests} pessoas</p>
-                        </div>
-                        <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                          {formatCurrency(trip.value)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Quick Info */}
                 <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 dark:bg-slate-800/50 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <Ship className="w-4 h-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">Total de passeios</p>
+                      <p className="text-sm font-medium text-foreground">{selectedClient.totalTrips}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">Último passeio</p>
+                      <p className="text-sm font-medium text-foreground">{formatDate(selectedClient.lastTripDate)}</p>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-muted-foreground" />
                     <div>
                       <p className="text-xs text-muted-foreground">Cliente desde</p>
-                      <p className="text-sm font-medium text-foreground">{formatDate(selectedClient.firstTrip)}</p>
+                      <p className="text-sm font-medium text-foreground">{formatDate(selectedClient.createdAt)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-muted-foreground" />
                     <div>
                       <p className="text-xs text-muted-foreground">Roteiro favorito</p>
-                      <p className="text-sm font-medium text-foreground">{selectedClient.favoriteRoute}</p>
+                      <p className="text-sm font-medium text-foreground">{selectedClient.favoriteRoute || '-'}</p>
                     </div>
                   </div>
                 </div>

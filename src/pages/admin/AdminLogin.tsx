@@ -1,28 +1,47 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Anchor, Lock, User, Eye, EyeOff, Waves } from "lucide-react";
+import { Anchor, Lock, User, Eye, EyeOff, Waves, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+// Senha mestra do ambiente
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_MASTER_PASSWORD || '';
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || '';
+
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(ADMIN_EMAIL);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
     
-    // Simular login (frontend only por enquanto)
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Simular delay de autenticação
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Ir para o dashboard
-    navigate("/admin/dashboard");
+    // Verificar senha mestra
+    if (password === ADMIN_PASSWORD && email.trim() !== "") {
+      // Salvar sessão no localStorage
+      localStorage.setItem('adminAuth', JSON.stringify({
+        email,
+        authenticated: true,
+        timestamp: Date.now()
+      }));
+      
+      // Ir para o dashboard
+      navigate("/admin/dashboard");
+    } else {
+      setError("Email ou senha incorretos");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -116,6 +135,18 @@ const AdminLogin = () => {
 
             <CardContent className="pt-4">
               <form onSubmit={handleLogin} className="space-y-5">
+                {/* Error Message */}
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"
+                  >
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    {error}
+                  </motion.div>
+                )}
+
                 {/* Email Field */}
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-sm font-medium text-gray-700">

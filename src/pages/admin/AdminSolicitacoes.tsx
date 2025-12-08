@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageSquare,
@@ -21,6 +21,7 @@ import {
   Reply,
   Star,
   StarOff,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,100 +50,9 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-
-// Mock data for requests
-const mockRequests = [
-  {
-    id: 1,
-    name: "João Silva",
-    email: "joao.silva@email.com",
-    phone: "(24) 99999-1234",
-    subject: "Passeio para Ilha Grande",
-    message: "Olá! Gostaria de saber mais informações sobre o passeio para Ilha Grande. Somos um grupo de 8 pessoas e gostaríamos de fazer no próximo fim de semana. Qual o valor e o que está incluso?",
-    type: "reservation",
-    status: "pending",
-    starred: true,
-    date: "2025-12-07T14:30:00",
-    route: "Ilha Grande - Full Day",
-    guests: 8,
-    preferredDate: "2025-12-14",
-  },
-  {
-    id: 2,
-    name: "Maria Santos",
-    email: "maria.santos@email.com",
-    phone: "(24) 98888-5678",
-    subject: "Dúvida sobre Charter Particular",
-    message: "Boa tarde! Estou interessada em alugar um barco para um evento privado de aniversário. Seria para aproximadamente 20 pessoas. Vocês fazem esse tipo de serviço?",
-    type: "inquiry",
-    status: "responded",
-    starred: false,
-    date: "2025-12-07T10:15:00",
-    route: null,
-    guests: 20,
-    preferredDate: null,
-  },
-  {
-    id: 3,
-    name: "Pedro Oliveira",
-    email: "pedro@empresa.com.br",
-    phone: "(24) 97777-9012",
-    subject: "Passeio Praias de Paraty",
-    message: "Olá, gostaria de fazer uma reserva para o passeio das praias de Paraty para 4 pessoas no dia 20/12. Ainda tem disponibilidade?",
-    type: "reservation",
-    status: "confirmed",
-    starred: true,
-    date: "2025-12-06T16:45:00",
-    route: "Praias de Paraty",
-    guests: 4,
-    preferredDate: "2025-12-20",
-  },
-  {
-    id: 4,
-    name: "Ana Costa",
-    email: "ana.costa@gmail.com",
-    phone: "(21) 96666-3456",
-    subject: "Cancelamento de reserva",
-    message: "Preciso cancelar minha reserva do dia 15/12 devido a um imprevisto. Como proceder?",
-    type: "cancellation",
-    status: "cancelled",
-    starred: false,
-    date: "2025-12-05T09:20:00",
-    route: "Pôr do Sol",
-    guests: 2,
-    preferredDate: "2025-12-15",
-  },
-  {
-    id: 5,
-    name: "Carlos Mendes",
-    email: "carlos.mendes@hotmail.com",
-    phone: "(24) 95555-7890",
-    subject: "Informações sobre Saco do Mamanguá",
-    message: "Bom dia! Vi no site o passeio para o Saco do Mamanguá e fiquei interessado. Quanto tempo dura o passeio e qual a melhor época para ir?",
-    type: "inquiry",
-    status: "pending",
-    starred: false,
-    date: "2025-12-05T08:00:00",
-    route: null,
-    guests: null,
-    preferredDate: null,
-  },
-  {
-    id: 6,
-    name: "Fernanda Lima",
-    email: "fernanda@email.com",
-    phone: "(24) 94444-1234",
-    subject: "Passeio de Lua Cheia",
-    message: "Olá! Vocês fazem passeio na lua cheia? Gostaria de saber as datas disponíveis e valores.",
-    type: "inquiry",
-    status: "pending",
-    starred: true,
-    date: "2025-12-04T18:30:00",
-    route: null,
-    guests: 6,
-    preferredDate: null,
-  },
-];
+import { useSolicitations } from "@/hooks/useSolicitations";
+import { Solicitation } from "@/types";
+import { Timestamp } from "firebase/firestore";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -192,19 +102,31 @@ const getTypeBadge = (type: string) => {
   }
 };
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
+// Helper para formatar datas do Firestore
+const formatDate = (date: Timestamp | string | undefined) => {
+  if (!date) return '-';
+  const dateObj = date instanceof Timestamp ? date.toDate() : new Date(date);
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(date);
+  }).format(dateObj);
 };
 
 const AdminSolicitacoes = () => {
-  const [requests, setRequests] = useState(mockRequests);
-  const [selectedRequest, setSelectedRequest] = useState<typeof mockRequests[0] | null>(null);
+  // Usar dados reais do Firestore
+  const { 
+    solicitations, 
+    stats: firestoreStats, 
+    loading, 
+    refresh, 
+    toggleStar, 
+    remove,
+    updateStatus,
+  } = useSolicitations();
+  
+  const [selectedRequest, setSelectedRequest] = useState<Solicitation | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterType, setFilterType] = useState("all");
@@ -214,36 +136,42 @@ const AdminSolicitacoes = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await refresh();
     setIsRefreshing(false);
   };
 
-  const toggleStar = (id: number) => {
-    setRequests(prev =>
-      prev.map(req =>
-        req.id === id ? { ...req, starred: !req.starred } : req
-      )
-    );
+  const handleToggleStar = async (id: string, starred: boolean) => {
+    try {
+      await toggleStar(id, starred);
+    } catch (error) {
+      console.error('Erro ao alternar estrela:', error);
+    }
   };
 
-  const filteredRequests = requests
-    .filter(req => {
-      const matchesStatus = filterStatus === "all" || req.status === filterStatus;
-      const matchesType = filterType === "all" || req.type === filterType;
-      const matchesFavorites = !filterFavorites || req.starred;
-      const matchesSearch = 
-        req.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        req.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        req.subject.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesStatus && matchesType && matchesFavorites && matchesSearch;
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const filteredRequests = useMemo(() => {
+    return solicitations
+      .filter(req => {
+        const matchesStatus = filterStatus === "all" || req.status === filterStatus;
+        const matchesType = filterType === "all" || req.type === filterType;
+        const matchesFavorites = !filterFavorites || req.starred;
+        const matchesSearch = 
+          req.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          req.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          req.subject.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesStatus && matchesType && matchesFavorites && matchesSearch;
+      })
+      .sort((a, b) => {
+        const dateA = a.createdAt instanceof Timestamp ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+        const dateB = b.createdAt instanceof Timestamp ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+        return dateB.getTime() - dateA.getTime();
+      });
+  }, [solicitations, filterStatus, filterType, filterFavorites, searchQuery]);
 
-  const stats = {
-    total: requests.length,
-    pending: requests.filter(r => r.status === "pending").length,
-    responded: requests.filter(r => r.status === "responded").length,
-    confirmed: requests.filter(r => r.status === "confirmed").length,
+  const stats = firestoreStats || {
+    total: solicitations.length,
+    pending: solicitations.filter(r => r.status === "pending").length,
+    responded: solicitations.filter(r => r.status === "responded").length,
+    confirmed: solicitations.filter(r => r.status === "confirmed").length,
   };
 
   return (
@@ -256,7 +184,7 @@ const AdminSolicitacoes = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-md dark:shadow-none">
               <MessageSquare className="w-5 h-5 text-white" />
             </div>
             Solicitações
@@ -292,7 +220,7 @@ const AdminSolicitacoes = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-blue-50 dark:bg-blue-950/30 hover:shadow-md transition-all">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md dark:shadow-none shrink-0">
                 <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
@@ -309,7 +237,7 @@ const AdminSolicitacoes = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-amber-50 dark:bg-amber-950/30 hover:shadow-md transition-all">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-md dark:shadow-none">
                 <Clock className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -326,7 +254,7 @@ const AdminSolicitacoes = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-cyan-50 dark:bg-cyan-950/30 hover:shadow-md transition-all">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-md dark:shadow-none">
                 <Reply className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -343,7 +271,7 @@ const AdminSolicitacoes = () => {
         >
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-emerald-50 dark:bg-emerald-950/30 hover:shadow-md transition-all">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md dark:shadow-none">
                 <CheckCircle2 className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -403,9 +331,9 @@ const AdminSolicitacoes = () => {
               >
                 <Star className={`w-4 h-4 ${filterFavorites ? "fill-white" : ""}`} />
                 <span className="hidden sm:inline ml-2">Favoritos</span>
-                {requests.filter(r => r.starred).length > 0 && (
-                  <span className={`ml-1 sm:ml-2 px-1.5 py-0.5 text-xs rounded-full ${filterFavorites ? "bg-white/20" : "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400"}`}>
-                    {requests.filter(r => r.starred).length}
+                {solicitations.filter(r => r.starred).length > 0 && (
+                  <span className={`hidden xs:inline ml-1 sm:ml-2 px-1.5 py-0.5 text-xs rounded-full ${filterFavorites ? "bg-white/20" : "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400"}`}>
+                    {solicitations.filter(r => r.starred).length}
                   </span>
                 )}
               </Button>
@@ -440,7 +368,7 @@ const AdminSolicitacoes = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleStar(request.id);
+                          handleToggleStar(request.id!, request.starred);
                         }}
                         className="text-muted-foreground hover:text-amber-500 transition-colors"
                       >
@@ -479,7 +407,7 @@ const AdminSolicitacoes = () => {
                     {/* Date & Actions */}
                     <div className="flex items-start gap-2">
                       <span className="text-xs text-muted-foreground whitespace-nowrap bg-muted dark:bg-slate-800 px-2 py-1 rounded-md">
-                        {formatDate(request.date)}
+                        {formatDate(request.createdAt)}
                       </span>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
@@ -517,7 +445,7 @@ const AdminSolicitacoes = () => {
           {/* Pagination */}
           <div className="flex items-center justify-between p-4 border-t border-border dark:border-slate-800 bg-muted/30 dark:bg-slate-800/30">
             <p className="text-sm text-muted-foreground">
-              Mostrando <span className="font-semibold text-foreground">{filteredRequests.length}</span> de <span className="font-semibold text-foreground">{requests.length}</span> solicitações
+              Mostrando <span className="font-semibold text-foreground">{filteredRequests.length}</span> de <span className="font-semibold text-foreground">{solicitations.length}</span> solicitações
             </p>
             <div className="flex items-center gap-1">
               <Button variant="ghost" size="sm" disabled className="dark:hover:bg-slate-700">
@@ -539,17 +467,17 @@ const AdminSolicitacoes = () => {
 
       {/* Request Detail Dialog */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <DialogContent className="max-w-2xl bg-card dark:bg-slate-900 border-border dark:border-slate-700">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-card dark:bg-slate-900 border-border dark:border-slate-700">
           {selectedRequest && (
             <>
               <DialogHeader>
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-ocean-navy to-ocean-teal flex items-center justify-center text-white font-semibold text-lg shadow-lg">
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-ocean-navy to-ocean-teal flex items-center justify-center text-white font-semibold text-base md:text-lg shadow-md dark:shadow-none shrink-0">
                     {selectedRequest.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                   </div>
-                  <div>
-                    <DialogTitle className="text-xl text-foreground">{selectedRequest.name}</DialogTitle>
-                    <DialogDescription className="flex items-center gap-2 mt-1">
+                  <div className="min-w-0">
+                    <DialogTitle className="text-lg md:text-xl text-foreground truncate">{selectedRequest.name}</DialogTitle>
+                    <DialogDescription className="flex flex-wrap items-center gap-2 mt-1">
                       {getTypeBadge(selectedRequest.type)}
                       {getStatusBadge(selectedRequest.status)}
                     </DialogDescription>
@@ -559,29 +487,29 @@ const AdminSolicitacoes = () => {
 
               <Tabs defaultValue="details" className="mt-4">
                 <TabsList className="w-full bg-muted dark:bg-slate-800 p-1">
-                  <TabsTrigger value="details" className="flex-1 data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Detalhes</TabsTrigger>
-                  <TabsTrigger value="reply" className="flex-1 data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Responder</TabsTrigger>
-                  <TabsTrigger value="history" className="flex-1 data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Histórico</TabsTrigger>
+                  <TabsTrigger value="details" className="flex-1 text-xs md:text-sm data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Detalhes</TabsTrigger>
+                  <TabsTrigger value="reply" className="flex-1 text-xs md:text-sm data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Responder</TabsTrigger>
+                  <TabsTrigger value="history" className="flex-1 text-xs md:text-sm data-[state=active]:bg-background dark:data-[state=active]:bg-slate-700">Histórico</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="details" className="space-y-4 mt-4">
                   {/* Contact Info */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                      <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0">
                         <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       </div>
-                      <span className="text-sm text-foreground">{selectedRequest.email}</span>
+                      <span className="text-sm text-foreground truncate">{selectedRequest.email}</span>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
                         <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       <span className="text-sm text-foreground">{selectedRequest.phone}</span>
                     </div>
                     {selectedRequest.route && (
                       <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                        <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center shrink-0">
                           <Calendar className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                         </div>
                         <span className="text-sm text-foreground">{selectedRequest.route}</span>
@@ -589,7 +517,7 @@ const AdminSolicitacoes = () => {
                     )}
                     {selectedRequest.guests && (
                       <div className="flex items-center gap-3 p-3 bg-muted dark:bg-slate-800 rounded-xl border border-border/50 dark:border-slate-700">
-                        <div className="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center shrink-0">
                           <AlertCircle className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                         </div>
                         <span className="text-sm text-foreground">{selectedRequest.guests} pessoas</span>
@@ -646,7 +574,7 @@ const AdminSolicitacoes = () => {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-foreground">Solicitação recebida</p>
-                        <p className="text-xs text-muted-foreground mt-1">{formatDate(selectedRequest.date)}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{formatDate(selectedRequest.createdAt)}</p>
                       </div>
                     </div>
                     <div className="text-center py-6">

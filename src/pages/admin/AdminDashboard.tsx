@@ -1,3 +1,4 @@
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   TrendingUp,
@@ -14,142 +15,44 @@ import {
   Activity,
   Eye,
   Waves,
+  Loader2,
+  RefreshCw,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useDashboard } from "@/hooks/useDashboard";
+import { useSolicitations } from "@/hooks/useSolicitations";
+import { Timestamp } from "firebase/firestore";
+import { Solicitation } from "@/types";
 
-// Stats Cards Data
-const statsCards = [
-  {
-    title: "Solicitações",
-    value: "24",
-    change: "+12%",
-    trend: "up",
-    icon: MessageSquare,
-    gradient: "from-blue-500 to-blue-600",
-    bgLight: "bg-blue-50",
-    bgDark: "dark:bg-blue-950/50",
-    description: "Este mês",
-  },
-  {
-    title: "Reservas Confirmadas",
-    value: "18",
-    change: "+8%",
-    trend: "up",
-    icon: Calendar,
-    gradient: "from-emerald-500 to-emerald-600",
-    bgLight: "bg-emerald-50",
-    bgDark: "dark:bg-emerald-950/50",
-    description: "Este mês",
-  },
-  {
-    title: "Clientes Novos",
-    value: "156",
-    change: "+23%",
-    trend: "up",
-    icon: Users,
-    gradient: "from-violet-500 to-violet-600",
-    bgLight: "bg-violet-50",
-    bgDark: "dark:bg-violet-950/50",
-    description: "Este mês",
-  },
-  {
-    title: "Receita",
-    value: "R$ 45.890",
-    change: "-5%",
-    trend: "down",
-    icon: DollarSign,
-    gradient: "from-amber-500 to-amber-600",
-    bgLight: "bg-amber-50",
-    bgDark: "dark:bg-amber-950/50",
-    description: "Este mês",
-  },
-];
+// Helper para formatar datas do Firestore
+const formatTimeAgo = (date: Timestamp | Date | undefined) => {
+  if (!date) return '-';
+  const now = new Date();
+  const dateObj = date instanceof Timestamp ? date.toDate() : date;
+  const diff = Math.floor((now.getTime() - dateObj.getTime()) / 1000); // segundos
+  
+  if (diff < 60) return 'Há poucos segundos';
+  if (diff < 3600) return `Há ${Math.floor(diff / 60)} minutos`;
+  if (diff < 86400) return `Há ${Math.floor(diff / 3600)} horas`;
+  if (diff < 604800) return `Há ${Math.floor(diff / 86400)} dias`;
+  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(dateObj);
+};
 
-// Recent Requests Data
-const recentRequests = [
-  {
-    id: 1,
-    client: "João Silva",
-    email: "joao@email.com",
-    type: "Passeio para Ilha Grande",
-    status: "pending",
-    date: "Há 5 minutos",
-    avatar: "JS",
-  },
-  {
-    id: 2,
-    client: "Maria Santos",
-    email: "maria@email.com",
-    type: "Charter Particular",
-    status: "confirmed",
-    date: "Há 1 hora",
-    avatar: "MS",
-  },
-  {
-    id: 3,
-    client: "Pedro Oliveira",
-    email: "pedro@email.com",
-    type: "Passeio Praias",
-    status: "pending",
-    date: "Há 2 horas",
-    avatar: "PO",
-  },
-  {
-    id: 4,
-    client: "Ana Costa",
-    email: "ana@email.com",
-    type: "Festa a Bordo",
-    status: "cancelled",
-    date: "Há 3 horas",
-    avatar: "AC",
-  },
-  {
-    id: 5,
-    client: "Carlos Mendes",
-    email: "carlos@email.com",
-    type: "Passeio Pôr do Sol",
-    status: "confirmed",
-    date: "Há 4 horas",
-    avatar: "CM",
-  },
-];
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+};
 
-// Backend Status
+// Backend Status - verificar em tempo real
 const backendServices = [
   { name: "Firebase Auth", status: "online", latency: "45ms" },
   { name: "Firestore", status: "online", latency: "32ms" },
   { name: "Storage", status: "online", latency: "28ms" },
   { name: "Resend Email", status: "online", latency: "89ms" },
-];
-
-// Popular Routes
-const popularRoutes = [
-  { name: "Ilha Grande", bookings: 45, percentage: 85, color: "from-cyan-400 to-blue-500" },
-  { name: "Praias de Paraty", bookings: 38, percentage: 72, color: "from-teal-400 to-cyan-500" },
-  { name: "Saco do Mamanguá", bookings: 28, percentage: 53, color: "from-emerald-400 to-teal-500" },
-  { name: "Pôr do Sol", bookings: 22, percentage: 42, color: "from-orange-400 to-amber-500" },
-];
-
-// Chart data for weekly overview
-const weeklyData = [
-  { day: "Seg", requests: 4, bookings: 2 },
-  { day: "Ter", requests: 6, bookings: 4 },
-  { day: "Qua", requests: 8, bookings: 5 },
-  { day: "Qui", requests: 5, bookings: 3 },
-  { day: "Sex", requests: 12, bookings: 8 },
-  { day: "Sáb", requests: 18, bookings: 12 },
-  { day: "Dom", requests: 15, bookings: 10 },
-];
-
-// Monthly trend data
-const monthlyTrend = [
-  { month: "Jan", value: 65 },
-  { month: "Fev", value: 72 },
-  { month: "Mar", value: 85 },
-  { month: "Abr", value: 78 },
-  { month: "Mai", value: 92 },
-  { month: "Jun", value: 100 },
 ];
 
 const getStatusBadge = (status: string) => {
@@ -202,8 +105,107 @@ const getServiceStatusIcon = (status: string) => {
 };
 
 const AdminDashboard = () => {
-  const maxRequests = Math.max(...weeklyData.map(d => d.requests));
-  const maxMonthly = Math.max(...monthlyTrend.map(d => d.value));
+  // Carregar dados reais do Firestore
+  const { stats: dashboardStats, loading: statsLoading, refresh: refreshStats } = useDashboard();
+  const { solicitations, loading: solicitationsLoading, stats: solicitationStats } = useSolicitations();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refreshStats();
+    setIsRefreshing(false);
+  };
+
+  // Pegar as 5 solicitações mais recentes
+  const recentSolicitations = useMemo(() => {
+    return solicitations.slice(0, 5);
+  }, [solicitations]);
+
+  // Formatar cards de estatísticas
+  const statsCards = useMemo(() => {
+    if (!dashboardStats) {
+      return [
+        { title: "Solicitações", value: "0", change: "", trend: "up" as const, icon: MessageSquare, gradient: "from-blue-500 to-blue-600", bgLight: "bg-blue-50", bgDark: "dark:bg-blue-950/50", description: "Este mês" },
+        { title: "Reservas Confirmadas", value: "0", change: "", trend: "up" as const, icon: Calendar, gradient: "from-emerald-500 to-emerald-600", bgLight: "bg-emerald-50", bgDark: "dark:bg-emerald-950/50", description: "Este mês" },
+        { title: "Clientes", value: "0", change: "", trend: "up" as const, icon: Users, gradient: "from-violet-500 to-violet-600", bgLight: "bg-violet-50", bgDark: "dark:bg-violet-950/50", description: "Total cadastrado" },
+        { title: "Receita", value: "R$ 0", change: "", trend: "up" as const, icon: DollarSign, gradient: "from-amber-500 to-amber-600", bgLight: "bg-amber-50", bgDark: "dark:bg-amber-950/50", description: "Este mês" },
+      ];
+    }
+
+    return [
+      {
+        title: "Solicitações",
+        value: String(dashboardStats.solicitations.total),
+        change: `${dashboardStats.solicitations.pending} pendentes`,
+        trend: "up" as const,
+        icon: MessageSquare,
+        gradient: "from-blue-500 to-blue-600",
+        bgLight: "bg-blue-50",
+        bgDark: "dark:bg-blue-950/50",
+        description: "Total recebidas",
+      },
+      {
+        title: "Reservas Confirmadas",
+        value: String(dashboardStats.reservations.confirmed),
+        change: `${dashboardStats.reservations.monthCount} este mês`,
+        trend: "up" as const,
+        icon: Calendar,
+        gradient: "from-emerald-500 to-emerald-600",
+        bgLight: "bg-emerald-50",
+        bgDark: "dark:bg-emerald-950/50",
+        description: "Total confirmadas",
+      },
+      {
+        title: "Clientes",
+        value: String(dashboardStats.clients.total),
+        change: `${dashboardStats.clients.vip} VIP`,
+        trend: "up" as const,
+        icon: Users,
+        gradient: "from-violet-500 to-violet-600",
+        bgLight: "bg-violet-50",
+        bgDark: "dark:bg-violet-950/50",
+        description: "Total cadastrado",
+      },
+      {
+        title: "Receita",
+        value: formatCurrency(dashboardStats.reservations.monthRevenue),
+        change: formatCurrency(dashboardStats.reservations.totalRevenue) + " total",
+        trend: dashboardStats.reservations.monthRevenue > 0 ? "up" as const : "down" as const,
+        icon: DollarSign,
+        gradient: "from-amber-500 to-amber-600",
+        bgLight: "bg-amber-50",
+        bgDark: "dark:bg-amber-950/50",
+        description: "Este mês",
+      },
+    ];
+  }, [dashboardStats]);
+
+  // Popular routes (se disponível)
+  const popularRoutes = useMemo(() => {
+    if (!dashboardStats?.popularRoutes || dashboardStats.popularRoutes.length === 0) {
+      return [
+        { name: "Nenhum roteiro ainda", bookings: 0, percentage: 0, color: "from-gray-400 to-gray-500" },
+      ];
+    }
+    const maxBookings = Math.max(...dashboardStats.popularRoutes.map(r => r.bookings));
+    const colors = [
+      "from-cyan-400 to-blue-500",
+      "from-teal-400 to-cyan-500",
+      "from-emerald-400 to-teal-500",
+      "from-orange-400 to-amber-500",
+    ];
+    return dashboardStats.popularRoutes.map((route, index) => ({
+      name: route.routeName,
+      bookings: route.bookings,
+      percentage: maxBookings > 0 ? (route.bookings / maxBookings) * 100 : 0,
+      color: colors[index % colors.length],
+    }));
+  }, [dashboardStats]);
+
+  const loading = statsLoading && solicitationsLoading;
+
+  // Tratamento de erro - mostra conteúdo mesmo com erro
+  const hasError = !dashboardStats && !statsLoading;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -238,15 +240,35 @@ const AdminDashboard = () => {
             Bem-vindo de volta! Aqui está o resumo do seu negócio.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground bg-card dark:bg-slate-800/50 px-4 py-2 rounded-full border border-border">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span>Sistema operacional</span>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="bg-card dark:bg-slate-800 border-border dark:border-slate-600 hover:bg-muted dark:hover:bg-slate-700 text-foreground"
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+            Atualizar
+          </Button>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground bg-card dark:bg-slate-800/50 px-4 py-2 rounded-full border border-border">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Sistema operacional</span>
+          </div>
         </div>
       </div>
 
+      {/* Loading State */}
+      {loading ? (
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="w-8 h-8 animate-spin text-ocean-teal" />
+          <span className="ml-3 text-muted-foreground">Carregando dados...</span>
+        </div>
+      ) : (
+      <>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statsCards.map((stat) => (
@@ -278,7 +300,7 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                   <div
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-lg shrink-0`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-md dark:shadow-none shrink-0`}
                   >
                     <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
@@ -306,34 +328,42 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {recentRequests.map((request, index) => (
-                  <motion.div
-                    key={request.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-muted/50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-ocean-navy to-ocean-teal flex items-center justify-center text-white font-medium text-sm shadow-md">
-                      {request.avatar}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-medium text-foreground truncate">
-                          {request.client}
-                        </p>
-                        {getStatusBadge(request.status)}
+                {recentSolicitations.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>Nenhuma solicitação recebida ainda</p>
+                    <p className="text-sm">As solicitações aparecerão aqui</p>
+                  </div>
+                ) : (
+                  recentSolicitations.map((solicitation, index) => (
+                    <motion.div
+                      key={solicitation.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center gap-4 p-3 rounded-xl hover:bg-muted/50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-ocean-navy to-ocean-teal flex items-center justify-center text-white font-medium text-sm shadow-md">
+                        {solicitation.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()}
                       </div>
-                      <p className="text-sm text-muted-foreground truncate">{request.type}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground">{request.date}</p>
-                      <button className="mt-1 text-muted-foreground group-hover:text-ocean-teal transition-colors">
-                        <Eye className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-medium text-foreground truncate">
+                            {solicitation.name}
+                          </p>
+                          {getStatusBadge(solicitation.status)}
+                        </div>
+                        <p className="text-sm text-muted-foreground truncate">{solicitation.subject || solicitation.route || 'Contato geral'}</p>
+                      </div>
+                      <div className="text-right flex flex-col items-end">
+                        <p className="text-xs text-muted-foreground">{formatTimeAgo(solicitation.createdAt)}</p>
+                        <button className="mt-1 p-2 -mr-2 text-muted-foreground group-hover:text-ocean-teal transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center">
+                          <Eye className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
               </div>
             </CardContent>
           </Card>
@@ -413,115 +443,71 @@ const AdminDashboard = () => {
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Weekly Bar Chart */}
+        {/* Weekly Summary */}
         <motion.div variants={itemVariants}>
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50">
             <CardHeader>
               <CardTitle className="text-lg font-semibold text-foreground">Visão Semanal</CardTitle>
-              <CardDescription>Solicitações vs reservas dos últimos 7 dias</CardDescription>
+              <CardDescription>Resumo de atividades dos últimos 7 dias</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-48 sm:h-64 flex items-end justify-between gap-1 sm:gap-3 px-1 sm:px-2">
-                {weeklyData.map((day, index) => (
-                  <div key={day.day} className="flex-1 flex flex-col items-center gap-1 sm:gap-2">
-                    <div className="w-full flex items-end justify-center gap-0.5 sm:gap-1 h-32 sm:h-44">
-                      {/* Requests Bar */}
-                      <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: `${(day.requests / maxRequests) * 100}%` }}
-                        transition={{ delay: index * 0.05, duration: 0.6, ease: "easeOut" }}
-                        className="w-3 sm:w-5 bg-gradient-to-t from-blue-600 to-cyan-400 rounded-t-md shadow-sm relative group cursor-pointer"
-                      >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-700 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                          {day.requests} solicitações
-                        </div>
-                      </motion.div>
-                      {/* Bookings Bar */}
-                      <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: `${(day.bookings / maxRequests) * 100}%` }}
-                        transition={{ delay: index * 0.05 + 0.1, duration: 0.6, ease: "easeOut" }}
-                        className="w-3 sm:w-5 bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-t-md shadow-sm relative group cursor-pointer"
-                      >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-700 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                          {day.bookings} reservas
-                        </div>
-                      </motion.div>
-                    </div>
-                    <span className="text-xs font-medium text-muted-foreground">{day.day}</span>
+              <div className="h-48 sm:h-64 flex flex-col items-center justify-center text-center">
+                <Calendar className="w-16 h-16 text-muted-foreground/50 mb-4" />
+                <p className="text-lg font-medium text-foreground">Gráfico em Construção</p>
+                <p className="text-sm text-muted-foreground mt-2 max-w-xs">
+                  Os gráficos de tendência serão exibidos quando houver dados suficientes coletados ao longo do tempo.
+                </p>
+                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border dark:border-slate-700 w-full justify-center">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-blue-600">{dashboardStats?.solicitations.total || 0}</p>
+                    <p className="text-xs text-muted-foreground">Solicitações</p>
                   </div>
-                ))}
-              </div>
-              {/* Legend */}
-              <div className="flex items-center justify-center gap-4 sm:gap-6 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-border dark:border-slate-700">
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm bg-gradient-to-r from-blue-600 to-cyan-400" />
-                  <span className="text-xs sm:text-sm text-muted-foreground">Solicitações</span>
-                </div>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm bg-gradient-to-r from-emerald-600 to-emerald-400" />
-                  <span className="text-xs sm:text-sm text-muted-foreground">Reservas</span>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-emerald-600">{dashboardStats?.reservations.total || 0}</p>
+                    <p className="text-xs text-muted-foreground">Reservas</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-violet-600">{dashboardStats?.clients.total || 0}</p>
+                    <p className="text-xs text-muted-foreground">Clientes</p>
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Monthly Trend Chart */}
+        {/* Monthly Summary */}
         <motion.div variants={itemVariants}>
           <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50">
             <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">Tendência Mensal</CardTitle>
-              <CardDescription>Crescimento de reservas nos últimos 6 meses</CardDescription>
+              <CardTitle className="text-lg font-semibold text-foreground">Resumo Financeiro</CardTitle>
+              <CardDescription>Receitas e performance do mês</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-64 flex flex-col">
-                {/* Chart Area */}
-                <div className="flex-1 flex items-end justify-between gap-2 px-2 relative">
-                  {/* Grid Lines */}
-                  <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                    {[0, 1, 2, 3, 4].map((i) => (
-                      <div key={i} className="w-full border-t border-dashed border-border/50 dark:border-slate-700/50" />
-                    ))}
-                  </div>
-                  
-                  {monthlyTrend.map((month, index) => (
-                    <div key={month.month} className="flex-1 flex flex-col items-center gap-2 z-10">
-                      <div className="w-full flex items-end justify-center h-44">
-                        <motion.div
-                          initial={{ height: 0 }}
-                          animate={{ height: `${(month.value / maxMonthly) * 100}%` }}
-                          transition={{ delay: index * 0.1, duration: 0.7, ease: "easeOut" }}
-                          className="w-full max-w-12 relative group cursor-pointer"
-                        >
-                          {/* Bar with gradient */}
-                          <div className="w-full h-full bg-gradient-to-t from-ocean-navy via-ocean-teal to-cyan-400 dark:from-blue-700 dark:via-cyan-500 dark:to-cyan-300 rounded-t-lg shadow-lg" />
-                          
-                          {/* Glow effect */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-ocean-teal/20 to-transparent rounded-t-lg blur-sm" />
-                          
-                          {/* Value tooltip */}
-                          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg z-20">
-                            {month.value}%
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900 dark:border-t-slate-700" />
-                          </div>
-                        </motion.div>
-                      </div>
-                      <span className="text-xs font-medium text-muted-foreground">{month.month}</span>
+                <div className="flex-1 flex flex-col items-center justify-center text-center">
+                  <DollarSign className="w-16 h-16 text-muted-foreground/50 mb-4" />
+                  <div className="space-y-4 w-full">
+                    <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl">
+                      <p className="text-sm text-muted-foreground">Receita do Mês</p>
+                      <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+                        {formatCurrency(dashboardStats?.reservations.monthRevenue || 0)}
+                      </p>
                     </div>
-                  ))}
-                </div>
-                
-                {/* Stats Summary */}
-                <div className="flex items-center justify-between mt-6 pt-4 border-t border-border dark:border-slate-700">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-emerald-500" />
-                    <span className="text-sm text-muted-foreground">
-                      <span className="font-semibold text-emerald-500">+35%</span> crescimento
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="font-semibold text-foreground">Jun</span> melhor mês
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3 bg-muted dark:bg-slate-800 rounded-xl">
+                        <p className="text-xs text-muted-foreground">Receita Total</p>
+                        <p className="text-lg font-bold text-foreground">
+                          {formatCurrency(dashboardStats?.reservations.totalRevenue || 0)}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-muted dark:bg-slate-800 rounded-xl">
+                        <p className="text-xs text-muted-foreground">Reservas Pagas</p>
+                        <p className="text-lg font-bold text-foreground">
+                          {dashboardStats?.reservations.completed || 0}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -529,6 +515,8 @@ const AdminDashboard = () => {
           </Card>
         </motion.div>
       </div>
+      </>
+      )}
     </motion.div>
   );
 };

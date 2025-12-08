@@ -77,9 +77,11 @@ const AdminLayout = () => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const handleLogout = () => {
+    // Limpar sessão de autenticação
+    localStorage.removeItem('adminAuth');
     navigate("/admin");
   };
 
@@ -88,7 +90,7 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? "dark bg-gray-900" : "bg-gray-50"}`}>
+    <div className={`min-h-screen ${isDarkMode ? "dark bg-slate-950" : "bg-slate-50"}`}>
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
@@ -134,7 +136,7 @@ const AdminLayout = () => {
           {/* Mobile Close Button */}
           <button
             onClick={() => setMobileMenuOpen(false)}
-            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+            className="lg:hidden p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             <X className="w-5 h-5" />
           </button>
@@ -212,7 +214,7 @@ const AdminLayout = () => {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                className="lg:hidden p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center"
               >
                 <Menu className="w-6 h-6 text-gray-600 dark:text-gray-300" />
               </button>
@@ -233,7 +235,7 @@ const AdminLayout = () => {
               {/* Theme Toggle */}
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className="p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
               >
                 {isDarkMode ? (
                   <Sun className="w-5 h-5 text-yellow-500" />
@@ -245,9 +247,9 @@ const AdminLayout = () => {
               {/* Notifications */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                  <button className="relative p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
                     <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-80">
@@ -271,7 +273,7 @@ const AdminLayout = () => {
               {/* User Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors">
+                  <button className="flex items-center gap-3 p-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors min-h-[44px]">
                     <Avatar className="w-8 h-8">
                       <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" />
                       <AvatarFallback className="bg-ocean-teal text-white">AD</AvatarFallback>
@@ -302,7 +304,7 @@ const AdminLayout = () => {
         </header>
 
         {/* Page Content */}
-        <main className="p-4 sm:p-6">
+        <main className="p-4 sm:p-6 bg-slate-50 dark:bg-slate-950 min-h-[calc(100vh-4rem)]">
           <Outlet />
         </main>
       </div>
