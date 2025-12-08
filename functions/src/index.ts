@@ -213,3 +213,109 @@ export const sendEmail = onRequest(
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+/**
+ * Função para enviar email de resposta a uma solicitação
+ */
+export const sendReplyEmail = onRequest(
+  {
+    cors: true,
+  },
+  async (request, response) => {
+    return new Promise<void>((resolve) => {
+      corsHandler(request, response, async () => {
+        try {
+          logger.info("📧 Recebida requisição para envio de resposta", {
+            method: request.method,
+            body: request.body,
+          });
+
+          if (request.method !== "POST") {
+            response.status(405).json({
+              success: false,
+              error: "Método não permitido",
+            });
+            resolve();
+            return;
+          }
+
+          const { to, subject, message } = request.body;
+
+          if (!to || !subject || !message) {
+            logger.warn("❌ Dados obrigatórios ausentes");
+            response.status(400).json({
+              success: false,
+              error: "Destinatário, assunto e mensagem são obrigatórios",
+            });
+            resolve();
+            return;
+          }
+
+          logger.info("✅ Dados validados, enviando resposta...");
+
+          // Get environment variables
+          const resendApiKey = process.env.RESEND_API_KEY;
+
+          if (!resendApiKey) {
+            logger.error("❌ Variáveis de ambiente não configuradas");
+            response.status(500).json({
+              success: false,
+              error: "Configuração do servidor incompleta",
+            });
+            resolve();
+            return;
+          }
+
+          const resend = new Resend(resendApiKey);
+
+          const htmlTemplate = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <div style="background: linear-gradient(135deg, #0a3d62, #1e8449); padding: 20px; text-align: center;">
+                <h1 style="color: white; margin: 0;">⛵ Paraty Boat</h1>
+              </div>
+              <div style="padding: 30px; background: #f9f9f9;">
+                <p style="white-space: pre-wrap; line-height: 1.6;">${message}</p>
+              </div>
+              <div style="padding: 20px; text-align: center; background: #0a3d62; color: white;">
+                <p style="margin: 0; font-size: 14px;">Paraty Boat - Passeios de Lancha em Paraty</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px;">📞 WhatsApp: (11) 98244-8956</p>
+              </div>
+            </div>
+          `;
+
+          const emailResponse = await resend.emails.send({
+            from: "Paraty Boat <contato@paratyboat.com.br>",
+            to: [to],
+            subject: subject,
+            html: htmlTemplate,
+          });
+
+          if (emailResponse.error) {
+            logger.error("❌ Resend retornou erro:", emailResponse.error);
+            response.status(500).json({
+              success: false,
+              error: emailResponse.error.message,
+            });
+            resolve();
+            return;
+          }
+
+          const emailId = emailResponse.data?.id || "unknown";
+          logger.info(`✅ Resposta ${emailId} enviada com sucesso para ${to}`);
+
+          response.json({
+            success: true,
+            message: "Resposta enviada com sucesso!",
+            id: emailId,
+          });
+          resolve();
+        } catch (error) {
+          logger.error("❌ Erro ao enviar resposta:", error);
+          const message = error instanceof Error ? error.message : "Erro interno do servidor";
+          response.status(500).json({ success: false, error: message });
+          resolve();
+        }
+      });
+    });
+  }
+);

@@ -42,8 +42,36 @@ const AdminLayout = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   
   // Buscar contagens reais do Firestore
-  const { stats: solicitationStats } = useSolicitations();
-  const { stats: reservationStats } = useReservations();
+  const { stats: solicitationStats, solicitations } = useSolicitations();
+  const { stats: reservationStats, reservations } = useReservations();
+
+  // Notificações baseadas em dados reais
+  const pendingSolicitations = solicitations?.filter(s => s.status === 'pending') || [];
+  const pendingReservations = reservations?.filter(r => r.status === 'pending') || [];
+  const totalNotifications = pendingSolicitations.length + pendingReservations.length;
+
+  // Formatar tempo relativo
+  const formatRelativeTime = (date: Date | string | { toDate: () => Date } | undefined) => {
+    if (!date) return '';
+    let d: Date;
+    if (typeof date === 'object' && 'toDate' in date) {
+      d = date.toDate();
+    } else if (typeof date === 'string') {
+      d = new Date(date);
+    } else {
+      d = date;
+    }
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 1) return 'Agora';
+    if (diffMins < 60) return `Há ${diffMins} min`;
+    if (diffHours < 24) return `Há ${diffHours}h`;
+    return `Há ${diffDays} dias`;
+  };
 
   // Menu items com contagens dinâmicas
   const menuItems = [
@@ -255,24 +283,66 @@ const AdminLayout = () => {
                 <DropdownMenuTrigger asChild>
                   <button className="relative p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
                     <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+                    {totalNotifications > 0 && (
+                      <span className="absolute top-1.5 right-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs text-white font-medium">
+                        {totalNotifications > 9 ? '9+' : totalNotifications}
+                      </span>
+                    )}
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
-                  <DropdownMenuLabel>Notificações</DropdownMenuLabel>
+                <DropdownMenuContent align="end" className="w-80 max-h-96 overflow-y-auto">
+                  <DropdownMenuLabel className="flex justify-between items-center">
+                    <span>Notificações</span>
+                    {totalNotifications > 0 && (
+                      <Badge variant="secondary" className="text-xs">{totalNotifications} pendentes</Badge>
+                    )}
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="flex flex-col items-start gap-1 py-3">
-                    <span className="font-medium">Nova solicitação de reserva</span>
-                    <span className="text-sm text-gray-500">Cliente: João Silva - Há 5 minutos</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="flex flex-col items-start gap-1 py-3">
-                    <span className="font-medium">Pagamento confirmado</span>
-                    <span className="text-sm text-gray-500">Reserva #1234 - Há 1 hora</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="flex flex-col items-start gap-1 py-3">
-                    <span className="font-medium">Nova mensagem de contato</span>
-                    <span className="text-sm text-gray-500">Maria Santos - Há 2 horas</span>
-                  </DropdownMenuItem>
+                  {totalNotifications === 0 ? (
+                    <div className="py-6 text-center text-gray-500 text-sm">
+                      Nenhuma notificação pendente
+                    </div>
+                  ) : (
+                    <>
+                      {pendingSolicitations.slice(0, 3).map((sol) => (
+                        <DropdownMenuItem 
+                          key={sol.id} 
+                          className="flex flex-col items-start gap-1 py-3 cursor-pointer"
+                          onClick={() => navigate('/admin/solicitacoes')}
+                        >
+                          <span className="font-medium flex items-center gap-2">
+                            <MessageSquare className="w-4 h-4 text-blue-500" />
+                            Nova solicitação
+                          </span>
+                          <span className="text-sm text-gray-500">{sol.name} - {formatRelativeTime(sol.createdAt)}</span>
+                        </DropdownMenuItem>
+                      ))}
+                      {pendingReservations.slice(0, 3).map((res) => (
+                        <DropdownMenuItem 
+                          key={res.id} 
+                          className="flex flex-col items-start gap-1 py-3 cursor-pointer"
+                          onClick={() => navigate('/admin/reservas')}
+                        >
+                          <span className="font-medium flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-green-500" />
+                            Nova reserva pendente
+                          </span>
+                          <span className="text-sm text-gray-500">{res.clientName} - {formatRelativeTime(res.createdAt)}</span>
+                        </DropdownMenuItem>
+                      ))}
+                      {totalNotifications > 6 && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem 
+                            className="text-center text-blue-500 cursor-pointer justify-center"
+                            onClick={() => navigate('/admin/solicitacoes')}
+                          >
+                            Ver todas as notificações
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
 
