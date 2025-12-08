@@ -16,7 +16,6 @@ import {
 import { toast } from "sonner";
 import { Ship, Send, MessageCircle, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { sendContactEmail } from "@/services/emailService";
 import { createSolicitation } from "@/services/solicitationService";
 import { useState } from "react";
 
@@ -77,26 +76,27 @@ const Contato = () => {
           source: 'website',
         });
         console.log("Solicitação salva no Firestore");
+        
+        // Sucesso! A solicitação foi salva e o admin vai ver no painel
+        toast.success("Solicitação enviada com sucesso! Entraremos em contato em breve.");
+        reset();
       } catch (firestoreError) {
         console.error("Erro ao salvar no Firestore:", firestoreError);
-        // Continua mesmo se falhar o Firestore, pois o email ainda pode ser enviado
-      }
-      
-      // Enviar email usando o serviço Resend via API backend
-      const result = await sendContactEmail(data);
-      
-      if (result.success) {
-        toast.success(t('contact.form.successMessage'));
-        reset();
-      } else {
-        // Se o serviço falhar, mostrar mensagem específica mas não redirecionar
-        toast.error(result.error || 'Erro temporário. Use o WhatsApp para contato direto.');
-        console.error('Erro no envio:', result.error);
-        // Não limpar o formulário em caso de erro para que o usuário possa tentar novamente
+        // Se falhar o Firestore, redirecionar para WhatsApp
+        const routeLabel = routesOptions.find(r => r.key === data.roteiro)?.label || data.roteiro;
+        const whatsappMessage = encodeURIComponent(
+          `Olá! Vim pelo site e gostaria de informações sobre o roteiro: ${routeLabel}\n\n` +
+          `Nome: ${data.nome}\n` +
+          `Email: ${data.email}\n` +
+          `Telefone: ${data.telefone}\n\n` +
+          `Mensagem: ${data.mensagem}`
+        );
+        toast.info("Redirecionando para o WhatsApp...");
+        window.open(`https://wa.me/5511982448956?text=${whatsappMessage}`, '_blank');
       }
     } catch (error) {
       toast.error('Erro temporário. Use o WhatsApp para contato direto.');
-      console.error('Erro ao enviar email:', error);
+      console.error('Erro ao processar formulário:', error);
     } finally {
       setIsLoading(false);
     }
