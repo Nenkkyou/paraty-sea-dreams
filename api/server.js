@@ -150,6 +150,62 @@ app.get("/health", (_req, res) => {
   res.json({ status: "OK", message: "API funcionando!" });
 });
 
+// Endpoint para enviar resposta a uma solicitação
+app.post("/api/send-reply", async (req, res) => {
+  console.log("📧 Recebida requisição para envio de resposta");
+  console.log("Body:", req.body);
+
+  try {
+    const { to, subject, message } = req.body;
+
+    if (!to || !subject || !message) {
+      console.log("❌ Dados obrigatórios ausentes");
+      return res.status(400).json({
+        success: false,
+        error: "Destinatário, assunto e mensagem são obrigatórios",
+      });
+    }
+
+    console.log("✅ Dados validados, enviando resposta...");
+
+    const htmlTemplate = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #0a3d62, #1e8449); padding: 20px; text-align: center;">
+          <h1 style="color: white; margin: 0;">⛵ Paraty Boat</h1>
+        </div>
+        <div style="padding: 30px; background: #f9f9f9;">
+          <p style="white-space: pre-wrap; line-height: 1.6;">${message}</p>
+        </div>
+        <div style="padding: 20px; text-align: center; background: #0a3d62; color: white;">
+          <p style="margin: 0; font-size: 14px;">Paraty Boat - Passeios de Lancha em Paraty</p>
+          <p style="margin: 5px 0 0 0; font-size: 12px;">📞 WhatsApp: (11) 98244-8956</p>
+        </div>
+      </div>
+    `;
+
+    const response = await resend.emails.send({
+      from: "Paraty Boat <contato@paratyboat.com.br>",
+      to: [to],
+      subject: subject,
+      html: htmlTemplate,
+    });
+
+    if (response.error) {
+      console.error("❌ Resend retornou erro:", response.error);
+      return res.status(500).json({ success: false, error: response.error.message });
+    }
+
+    const emailId = response.data?.id || response.id || "unknown";
+    console.log(`✅ Resposta ${emailId} enviada com sucesso para ${to}`);
+
+    return res.json({ success: true, message: "Resposta enviada com sucesso!", id: emailId });
+  } catch (error) {
+    console.error("❌ Erro ao enviar resposta:", error);
+    const message = error instanceof Error ? error.message : "Erro interno do servidor";
+    return res.status(500).json({ success: false, error: message });
+  }
+});
+
 app.listen(port, () => {
   console.log(`🚀 API rodando na porta ${port}`);
   console.log("📧 Resend configurado e pronto para enviar emails");
