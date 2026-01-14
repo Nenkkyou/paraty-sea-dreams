@@ -104,8 +104,15 @@ All colors MUST be HSL.
 }
 
 @layer base {
-  * {
+  *,
+  *::before,
+  *::after {
     @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-x: hidden;
   }
 
   body {

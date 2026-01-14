@@ -17,14 +17,12 @@ import {
   MessageSquare,
   Instagram,
   Facebook,
-  Camera,
   Shield,
   Key,
   Smartphone,
   CheckCircle2,
   AlertCircle,
   ChevronRight,
-  Anchor,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,7 +39,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 
 // Mock company data
 const companyData = {
@@ -164,49 +161,12 @@ const AdminConfiguracoes = () => {
 
         {/* Empresa Tab */}
         <TabsContent value="empresa" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Company Logo & Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <Card className="border border-border/50 dark:border-slate-700/50 shadow-md bg-card dark:bg-slate-900/50">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Camera className="w-5 h-5 text-ocean-teal" />
-                    Logo da Empresa
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex flex-col items-center">
-                    <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-ocean-navy to-ocean-teal flex items-center justify-center shadow-xl mb-4">
-                      <Anchor className="w-16 h-16 text-white" />
-                    </div>
-                    <Button variant="outline" size="sm" className="bg-card dark:bg-slate-800 border-border dark:border-slate-600">
-                      <Camera className="w-4 h-4 mr-2" />
-                      Alterar Logo
-                    </Button>
-                  </div>
-                  <Separator className="dark:bg-slate-700" />
-                  <div className="text-center">
-                    <h3 className="font-semibold text-foreground text-lg">{company.name}</h3>
-                    <p className="text-sm text-muted-foreground">{company.website}</p>
-                    <Badge className="mt-2 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 border-0">
-                      <CheckCircle2 className="w-3 h-3 mr-1" />
-                      Ativo
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
+          <div className="grid grid-cols-1 gap-6">
             {/* Company Details */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="lg:col-span-2"
+              transition={{ delay: 0.1 }}
             >
               <Card className="border border-border/50 dark:border-slate-700/50 shadow-md bg-card dark:bg-slate-900/50">
                 <CardHeader>
