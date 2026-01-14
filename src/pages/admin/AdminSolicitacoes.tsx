@@ -545,13 +545,9 @@ const AdminSolicitacoes = () => {
 
                   {/* Actions */}
                   <div className="flex gap-3 pt-4">
-                    <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg">
+                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg">
                       <CheckCircle2 className="w-4 h-4 mr-2" />
                       Confirmar Reserva
-                    </Button>
-                    <Button variant="outline" className="flex-1 border-border dark:border-slate-700 hover:bg-muted dark:hover:bg-slate-800">
-                      <Reply className="w-4 h-4 mr-2" />
-                      Responder
                     </Button>
                   </div>
                   

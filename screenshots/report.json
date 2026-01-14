@@ -1,0 +1,92 @@
+[
+  {
+    "viewport": "iPhone SE",
+    "width": 375,
+    "height": 667,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\iPhone-SE.png",
+    "status": "✅ PASSOU"
+  },
+  {
+    "viewport": "iPhone 12 Pro",
+    "width": 390,
+    "height": 844,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\iPhone-12-Pro.png",
+    "status": "✅ PASSOU"
+  },
+  {
+    "viewport": "iPhone 14 Pro Max",
+    "width": 430,
+    "height": 932,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\iPhone-14-Pro-Max.png",
+    "status": "✅ PASSOU"
+  },
+  {
+    "viewport": "iPad Mini",
+    "width": 768,
+    "height": 1024,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\iPad-Mini.png",
+    "status": "✅ PASSOU"
+  },
+  {
+    "viewport": "iPad Pro",
+    "width": 1024,
+    "height": 1366,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\iPad-Pro.png",
+    "status": "✅ PASSOU"
+  },
+  {
+    "viewport": "Laptop Small",
+    "width": 1366,
+    "height": 768,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\Laptop-Small.png",
+    "status": "✅ PASSOU"
+  },
+  {
+    "viewport": "Laptop",
+    "width": 1440,
+    "height": 900,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\Laptop.png",
+    "status": "✅ PASSOU"
+  },
+  {
+    "viewport": "Desktop",
+    "width": 1920,
+    "height": 1080,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\Desktop.png",
+    "status": "✅ PASSOU"
+  },
+  {
+    "viewport": "Desktop 4K",
+    "width": 2560,
+    "height": 1440,
+    "hasHorizontalScroll": false,
+    "overflowingElementsCount": 0,
+    "overflowingElements": [],
+    "screenshot": "C:\\Users\\allan\\OneDrive\\Desktop\\Paraty Boat Website\\paraty-sea-dreams\\screenshots\\Desktop-4K.png",
+    "status": "✅ PASSOU"
+  }
+]

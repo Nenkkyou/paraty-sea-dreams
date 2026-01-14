@@ -228,32 +228,32 @@ const AdminDashboard = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-4 sm:space-y-6"
+      className="space-y-4 sm:space-y-6 w-full max-w-full overflow-x-hidden"
     >
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground flex items-center gap-3">
-            <Waves className="w-8 h-8 text-ocean-teal" />
-            Dashboard
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
+        <div className="min-w-0 flex-shrink">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-foreground flex items-center gap-2 sm:gap-3">
+            <Waves className="w-6 h-6 sm:w-8 sm:h-8 text-ocean-teal flex-shrink-0" />
+            <span className="truncate">Dashboard</span>
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm sm:text-base text-muted-foreground mt-1 truncate">
             Bem-vindo de volta! Aqui está o resumo do seu negócio.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <Button
             variant="outline"
             size="sm"
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="bg-card dark:bg-slate-800 border-border dark:border-slate-600 hover:bg-muted dark:hover:bg-slate-700 text-foreground"
+            className="bg-card dark:bg-slate-800 border-border dark:border-slate-600 hover:bg-muted dark:hover:bg-slate-700 text-foreground h-8 sm:h-9 px-2 sm:px-3"
           >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
-            Atualizar
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
+            <span className="hidden sm:inline ml-2">Atualizar</span>
           </Button>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground bg-card dark:bg-slate-800/50 px-4 py-2 rounded-full border border-border">
-            <span className="relative flex h-2 w-2">
+          <div className="hidden md:flex items-center gap-2 text-xs sm:text-sm text-muted-foreground bg-card dark:bg-slate-800/50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-border">
+            <span className="relative flex h-2 w-2 flex-shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
@@ -271,39 +271,39 @@ const AdminDashboard = () => {
       ) : (
       <>
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 w-full">
         {statsCards.map((stat) => (
-          <motion.div key={stat.title} variants={itemVariants}>
-            <Card className={`relative overflow-hidden border border-border/50 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all duration-300 ${stat.bgLight} ${stat.bgDark}`}>
-              <CardContent className="p-4 sm:p-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1 sm:space-y-2">
-                    <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+          <motion.div key={stat.title} variants={itemVariants} className="min-w-0">
+            <Card className={`relative overflow-hidden border border-border/50 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all duration-300 ${stat.bgLight} ${stat.bgDark} h-full`}>
+              <CardContent className="p-3 sm:p-4 md:p-5">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <p className="text-[10px] sm:text-xs md:text-sm font-medium text-muted-foreground truncate">
                       {stat.title}
                     </p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-foreground truncate">
                       {stat.value}
                     </p>
-                    <div className="flex items-center gap-1.5">
-                      <span className={`inline-flex items-center gap-0.5 text-sm font-semibold px-2 py-0.5 rounded-full ${
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-1.5">
+                      <span className={`inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap ${
                         stat.trend === "up" 
                           ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400" 
                           : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"
                       }`}>
                         {stat.trend === "up" ? (
-                          <ArrowUpRight className="w-3.5 h-3.5" />
+                          <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                         ) : (
-                          <ArrowDownRight className="w-3.5 h-3.5" />
+                          <ArrowDownRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                         )}
-                        {stat.change}
+                        <span className="truncate">{stat.change}</span>
                       </span>
-                      <span className="text-xs text-muted-foreground">{stat.description}</span>
+                      <span className="text-[9px] sm:text-xs text-muted-foreground hidden sm:inline truncate">{stat.description}</span>
                     </div>
                   </div>
                   <div
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-md dark:shadow-none shrink-0`}
+                    className={`w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-md dark:shadow-none flex-shrink-0`}
                   >
-                    <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                    <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                   </div>
                 </div>
               </CardContent>
@@ -313,10 +313,10 @@ const AdminDashboard = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5 md:gap-6 w-full">
         {/* Recent Requests */}
-        <motion.div variants={itemVariants} className="lg:col-span-2">
-          <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 overflow-hidden">
+        <motion.div variants={itemVariants} className="xl:col-span-2 min-w-0">
+          <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 overflow-hidden w-full">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <div>
                 <CardTitle className="text-lg font-semibold text-foreground">Solicitações Recentes</CardTitle>
@@ -388,29 +388,28 @@ const AdminDashboard = () => {
         </motion.div>
 
         {/* Sidebar Cards */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-5 md:space-y-6 min-w-0">
           {/* Backend Status */}
           <motion.div variants={itemVariants}>
-            <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
-                  <Activity className="w-5 h-5 text-ocean-teal" />
-                  Status do Sistema
+            <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 w-full">
+              <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-4 md:px-6">
+                <CardTitle className="text-sm sm:text-base md:text-lg font-semibold flex items-center gap-2 text-foreground">
+                  <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-ocean-teal flex-shrink-0" />
+                  <span className="truncate">Status do Sistema</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-1">
+              <CardContent className="space-y-1 px-3 sm:px-4 md:px-6">
                 {backendServices.map((service) => (
                   <div
                     key={service.name}
-                    className="flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 dark:hover:bg-slate-800/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
+                    className="flex items-center justify-between p-2 sm:p-3 rounded-lg sm:rounded-xl hover:bg-muted/50 dark:hover:bg-slate-800/50 transition-colors gap-2">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                       {getServiceStatusIcon(service.status)}
-                      <span className="text-sm font-medium text-foreground">
+                      <span className="text-xs sm:text-sm font-medium text-foreground truncate">
                         {service.name}
                       </span>
                     </div>
-                    <span className="text-xs font-mono text-muted-foreground bg-muted dark:bg-slate-800 px-2 py-1 rounded-md">
+                    <span className="text-[10px] sm:text-xs font-mono text-muted-foreground bg-muted dark:bg-slate-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md flex-shrink-0">
                       {service.latency}
                     </span>
                   </div>
@@ -421,29 +420,29 @@ const AdminDashboard = () => {
 
           {/* Popular Routes */}
           <motion.div variants={itemVariants}>
-            <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
-                  <Ship className="w-5 h-5 text-ocean-teal" />
-                  Roteiros Populares
+            <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 w-full">
+              <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-4 md:px-6">
+                <CardTitle className="text-sm sm:text-base md:text-lg font-semibold flex items-center gap-2 text-foreground">
+                  <Ship className="w-4 h-4 sm:w-5 sm:h-5 text-ocean-teal flex-shrink-0" />
+                  <span className="truncate">Roteiros Populares</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-4 md:px-6">
                 {popularRoutes.map((route, index) => (
                   <motion.div 
                     key={route.name} 
-                    className="space-y-2"
+                    className="space-y-1.5 sm:space-y-2"
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-foreground">
+                    <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
+                      <span className="font-medium text-foreground truncate min-w-0">
                         {route.name}
                       </span>
-                      <span className="text-muted-foreground">{route.bookings} reservas</span>
+                      <span className="text-muted-foreground flex-shrink-0 text-[10px] sm:text-xs">{route.bookings} reservas</span>
                     </div>
-                    <div className="h-2 bg-muted dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 sm:h-2 bg-muted dark:bg-slate-800 rounded-full overflow-hidden">
                       <motion.div 
                         className={`h-full bg-gradient-to-r ${route.color} rounded-full`}
                         initial={{ width: 0 }}
@@ -460,33 +459,33 @@ const AdminDashboard = () => {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 md:gap-6 w-full">
         {/* Weekly Summary */}
-        <motion.div variants={itemVariants}>
-          <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">Visão Semanal</CardTitle>
-              <CardDescription>Resumo de atividades dos últimos 7 dias</CardDescription>
+        <motion.div variants={itemVariants} className="min-w-0">
+          <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 w-full">
+            <CardHeader className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+              <CardTitle className="text-sm sm:text-base md:text-lg font-semibold text-foreground">Visão Semanal</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Resumo de atividades dos últimos 7 dias</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-48 sm:h-64 flex flex-col items-center justify-center text-center">
-                <Calendar className="w-16 h-16 text-muted-foreground/50 mb-4" />
-                <p className="text-lg font-medium text-foreground">Gráfico em Construção</p>
-                <p className="text-sm text-muted-foreground mt-2 max-w-xs">
+            <CardContent className="px-3 sm:px-4 md:px-6">
+              <div className="h-40 sm:h-48 md:h-56 lg:h-64 flex flex-col items-center justify-center text-center">
+                <Calendar className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-muted-foreground/50 mb-2 sm:mb-4" />
+                <p className="text-sm sm:text-base md:text-lg font-medium text-foreground">Gráfico em Construção</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2 max-w-xs px-2">
                   Os gráficos de tendência serão exibidos quando houver dados suficientes coletados ao longo do tempo.
                 </p>
-                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border dark:border-slate-700 w-full justify-center">
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-blue-600">{dashboardStats?.solicitations.total || 0}</p>
-                    <p className="text-xs text-muted-foreground">Solicitações</p>
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border dark:border-slate-700 w-full justify-center flex-wrap">
+                  <div className="text-center px-1 sm:px-2">
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600">{dashboardStats?.solicitations.total || 0}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Solicitações</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-emerald-600">{dashboardStats?.reservations.total || 0}</p>
-                    <p className="text-xs text-muted-foreground">Reservas</p>
+                  <div className="text-center px-1 sm:px-2">
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-emerald-600">{dashboardStats?.reservations.total || 0}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Reservas</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-violet-600">{dashboardStats?.clients.total || 0}</p>
-                    <p className="text-xs text-muted-foreground">Clientes</p>
+                  <div className="text-center px-1 sm:px-2">
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-violet-600">{dashboardStats?.clients.total || 0}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Clientes</p>
                   </div>
                 </div>
               </div>
@@ -495,33 +494,33 @@ const AdminDashboard = () => {
         </motion.div>
 
         {/* Monthly Summary */}
-        <motion.div variants={itemVariants}>
-          <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">Resumo Financeiro</CardTitle>
-              <CardDescription>Receitas e performance do mês</CardDescription>
+        <motion.div variants={itemVariants} className="min-w-0">
+          <Card className="border border-border/50 dark:border-slate-700/50 shadow-sm bg-card dark:bg-slate-900/50 w-full">
+            <CardHeader className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+              <CardTitle className="text-sm sm:text-base md:text-lg font-semibold text-foreground">Resumo Financeiro</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Receitas e performance do mês</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-64 flex flex-col">
+            <CardContent className="px-3 sm:px-4 md:px-6">
+              <div className="h-auto sm:h-56 md:h-64 flex flex-col">
                 <div className="flex-1 flex flex-col items-center justify-center text-center">
-                  <DollarSign className="w-16 h-16 text-muted-foreground/50 mb-4" />
-                  <div className="space-y-4 w-full">
-                    <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl">
-                      <p className="text-sm text-muted-foreground">Receita do Mês</p>
-                      <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+                  <DollarSign className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-muted-foreground/50 mb-2 sm:mb-4" />
+                  <div className="space-y-3 sm:space-y-4 w-full">
+                    <div className="p-3 sm:p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg sm:rounded-xl">
+                      <p className="text-xs sm:text-sm text-muted-foreground">Receita do Mês</p>
+                      <p className="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 truncate">
                         {formatCurrency(dashboardStats?.reservations.monthRevenue || 0)}
                       </p>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="p-3 bg-muted dark:bg-slate-800 rounded-xl">
-                        <p className="text-xs text-muted-foreground">Receita Total</p>
-                        <p className="text-lg font-bold text-foreground">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                      <div className="p-2 sm:p-3 bg-muted dark:bg-slate-800 rounded-lg sm:rounded-xl">
+                        <p className="text-[10px] sm:text-xs text-muted-foreground">Receita Total</p>
+                        <p className="text-sm sm:text-base md:text-lg font-bold text-foreground truncate">
                           {formatCurrency(dashboardStats?.reservations.totalRevenue || 0)}
                         </p>
                       </div>
-                      <div className="p-3 bg-muted dark:bg-slate-800 rounded-xl">
-                        <p className="text-xs text-muted-foreground">Reservas Pagas</p>
-                        <p className="text-lg font-bold text-foreground">
+                      <div className="p-2 sm:p-3 bg-muted dark:bg-slate-800 rounded-lg sm:rounded-xl">
+                        <p className="text-[10px] sm:text-xs text-muted-foreground">Reservas Pagas</p>
+                        <p className="text-sm sm:text-base md:text-lg font-bold text-foreground">
                           {dashboardStats?.reservations.completed || 0}
                         </p>
                       </div>

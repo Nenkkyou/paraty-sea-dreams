@@ -124,7 +124,7 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? "dark bg-slate-950" : "bg-slate-50"}`}>
+    <div className={`min-h-screen overflow-x-hidden ${isDarkMode ? "dark bg-slate-950" : "bg-slate-50"}`}>
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
@@ -380,7 +380,7 @@ const AdminLayout = () => {
         </header>
 
         {/* Page Content */}
-        <main className="p-4 sm:p-6 bg-slate-50 dark:bg-slate-950 min-h-[calc(100vh-4rem)]">
+        <main className="p-4 sm:p-6 bg-slate-50 dark:bg-slate-950 min-h-[calc(100vh-4rem)] max-w-full overflow-x-hidden">
           <Outlet />
         </main>
       </div>
