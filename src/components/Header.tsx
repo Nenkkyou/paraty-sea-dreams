@@ -45,6 +45,14 @@ const Header = () => {
           >
             {t('header.roteiros')}
           </Link>
+          <a
+            href="https://drive.google.com/file/d/18tNFxODjSnIYNtJXgVf1nt8PNMrRQVcF/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium transition-colors py-3 px-4 rounded-lg hover:bg-white/10 text-primary-foreground/80 hover:text-accent"
+          >
+            Lancha Infinito
+          </a>
         </nav>
         
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">

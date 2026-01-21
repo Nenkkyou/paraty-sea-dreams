@@ -16,7 +16,7 @@ const Roteiros = () => {
     { key: 'lagoaVerde', images: ['lagoa-verde-1.jpg', 'lagoa-verde-2.jpg', 'lagoa-verde-3.jpg', 'lagoa-verde-4.jpg'] },
     { key: 'apreciacaoFundoMar', images: ['mergulho-1.jpg', 'mergulho-2.jpg'] },
     { key: 'praiaCrepusculo', images: ['crepusculo-2.jpg', 'crepusculo-3.jpg'] },
-    { key: 'passeioPersonalizado', images: ['passeio-personalizado-paraty.jpg'] },
+    { key: 'passeioPersonalizado', images: ['https://media.istockphoto.com/id/1341859818/pt/foto/embankment-of-historical-center-with-boats-in-paraty-rio-de-janeiro-brazil.jpg?s=612x612&w=0&k=20&c=I4LcxC8YPrnNRZXpoX1fsxB-1Ta196ioqf0oPVaNtY0='], isExternal: true },
   ];
 
   return (
@@ -52,6 +52,7 @@ const Roteiros = () => {
                 descricao={t(`routes.items.${route.key}.descricao`)}
                 imagens={route.images}
                 index={index}
+                isExternal={route.isExternal}
               />
             ))}
           </div>

@@ -9,10 +9,18 @@ interface RouteCardProps {
   descricao: string;
   imagens: string[];
   index: number;
+  isExternal?: boolean;
 }
 
-const RouteCard = ({ nome, descricao, imagens, index }: RouteCardProps) => {
+const RouteCard = ({ nome, descricao, imagens, index, isExternal = false }: RouteCardProps) => {
   const { t } = useTranslation();
+  
+  const getImageSrc = (imagem: string) => {
+    if (isExternal || imagem.startsWith('http')) {
+      return imagem;
+    }
+    return `/assets/boats/${imagem}`;
+  };
   
   return (
     <motion.div
@@ -28,7 +36,7 @@ const RouteCard = ({ nome, descricao, imagens, index }: RouteCardProps) => {
             {imagens.map((imagem, idx) => (
               <CarouselItem key={idx}>
                 <img
-                  src={`/assets/boats/${imagem}`}
+                  src={getImageSrc(imagem)}
                   alt={`${nome} - ${idx + 1}`}
                   className="w-full h-56 sm:h-64 object-cover"
                 />
